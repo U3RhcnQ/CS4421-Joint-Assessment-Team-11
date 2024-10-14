@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class guitesting {
+public class gui_testing {
 
     public static void main(String[] args) {
         JFrame f=new JFrame();//creating instance of JFrame

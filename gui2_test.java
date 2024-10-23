@@ -1,6 +1,5 @@
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.*;
@@ -12,7 +11,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -30,33 +28,31 @@ public class gui2_test {
         // Title
         final JFrame frame = new JFrame("TaskSys");
 
+        // Attempt to load the image and handle exception if not available
         try {
             // Load the logo image
             Image icon = ImageIO.read(new File("images/icon.png"));
-
             // Set the icon for the JFrame
             frame.setIconImage(icon);
 
         } catch (IOException e) {
-
             e.printStackTrace();
         }
 
         // Create The tabbed Pane
         JTabbedPane tabbedPane = new JTabbedPane();
 
-
+        // Add the First Panel
         JPanel panel1 = new JPanel(false);
-        JLabel filler = new JLabel("CPU Info");
-        filler.setHorizontalAlignment(JLabel.CENTER);
-        panel1.setLayout(new GridLayout(1, 1));
-        //panel1.add(filler);
+        panel1.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
 
+
+        // Chart Code
         XYSeries series;
 
-
         // Create a series to hold the data
-        series = new XYSeries("Data");
+        series = new XYSeries("");
 
         // Create a dataset and add the series to it
         XYSeriesCollection dataset = new XYSeriesCollection();
@@ -64,18 +60,43 @@ public class gui2_test {
 
         // Create the chart using JFreeChart
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Real-Time Data", // Chart title
-                "Time",           // X-Axis Label
-                "Value",          // Y-Axis Label
+                "", // Chart title
+                "",           // X-Axis Label
+                "",          // Y-Axis Label
                 dataset,          // Dataset for the chart
                 PlotOrientation.VERTICAL,
                 true, true, false
         );
 
         // Create a panel for the chart
+
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
-        panel1.add(chartPanel);
+        chartPanel.setPreferredSize(new java.awt.Dimension(200, 200));
+
+        c.weightx = 0.6;
+        c.weighty = 0.6;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        panel1.add(chartPanel, c);
+
+        JLabel cpu_right_info_panel = new JLabel("CPU Info");
+        cpu_right_info_panel.setHorizontalAlignment(JLabel.CENTER);
+        c.weightx = 0.4;
+        c.weighty = 0.6;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 0;
+        panel1.add(cpu_right_info_panel, c);
+
+        JLabel cpu_bottom_info_panel = new JLabel("CPU Info");
+        cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
+        c.weightx = 1.0;
+        c.weighty = 0.4;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        panel1.add(cpu_bottom_info_panel, c);
 
         // Timer to update the chart every second
         Timer timer = new Timer(10, new ActionListener() {

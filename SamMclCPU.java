@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class SamMclCPU {
     public static void main(String[] args) {
 
-        System.loadLibrary("cpuInfo");
+        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
 
@@ -21,6 +21,7 @@ public class SamMclCPU {
                         cpu.coresPerSocket() + " cores" + cpu.coresPerSocket() + "logical cores and a base speed of " + baseSpeed);
             }
         }
+
         else{
             // Show CPU model, CPU sockets and cores per socket
             String baseSpeed1 = model.substring(30,37);
@@ -43,25 +44,31 @@ public class SamMclCPU {
         // core 1.  This assumes 10Hz so in one second we have 100
         cpu.read(1);
 
+        // Idle times for all cores
         for (int i = 1; i <= cpu.coresPerSocket(); i++){
             System.out.println("core" + i + "idle=" + cpu.getIdleTime(i) + "%");
             System.out.println("core" + i + "active=" + (100 - cpu.getIdleTime(i) + "%"));
         }
 
+        //Average idle time
         ArrayList<Integer> idleTimeArray = new ArrayList<>();
         for (int i = 1; i <= cpu.coresPerSocket(); i++){
             idleTimeArray.add(cpu.getIdleTime(i));
+            System.out.println(cpu.getIdleTime(i));
         }
-
         double sum = 0;
         for (int a = 0; a < cpu.coresPerSocket(); a++) {
             sum += idleTimeArray.get(a);
         }
         double idleTimeAverage = sum / cpu.coresPerSocket();
+        System.out.println(idleTimeAverage);
 
+
+        // Average user time
         ArrayList<Integer> userTimeArray = new ArrayList<>();
         for (int i = 1; i <= cpu.coresPerSocket(); i++){
             userTimeArray.add(cpu.getUserTime(i));
+            System.out.println(cpu.getUserTime(i));
         }
 
         double sum1 = 0;
@@ -69,10 +76,14 @@ public class SamMclCPU {
             sum1 += userTimeArray.get(a);
         }
         double userTimeAverage = sum1 / cpu.coresPerSocket();
+        System.out.println(userTimeAverage);
 
+
+        // Average system time
         ArrayList<Integer> systemTimeArray = new ArrayList<>();
         for (int i = 1; i <= cpu.coresPerSocket(); i++){
             systemTimeArray.add(cpu.getSystemTime(i));
+            System.out.println(cpu.getSystemTime(i));
         }
 
         double sum2 = 0;
@@ -80,13 +91,17 @@ public class SamMclCPU {
             sum2 += systemTimeArray.get(a);
         }
         double systemTimeAverage = sum2 / cpu.coresPerSocket();
+        System.out.println(systemTimeAverage);
 
+
+        // Utilisation Average
         ArrayList<Integer> utilisationAverage = new ArrayList<>();
         for (int j = 1; j <= cpu.coresPerSocket(); j++) {
-            double untilisationPercentage = ((cpu.getUserTime(1) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)));
+            double untilisationPercentage = ((double)(cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)));
             System.out.println("Untilisation percentage for core " + j + " is " + untilisationPercentage + "%");
             utilisationAverage.add(cpu.getIdleTime(j));
         }
+        System.out.println(utilisationAverage);
 
     }
 }

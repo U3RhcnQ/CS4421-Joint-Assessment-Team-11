@@ -45,14 +45,14 @@ public class SamMclCPU {
         cpu.read(1);
 
         // Idle times for all cores
-        for (int i = 1; i <= cpu.coresPerSocket(); i++){
+        for (int i = 0; i < cpu.coresPerSocket(); i++){
             System.out.println("core" + i + "idle=" + cpu.getIdleTime(i) + "%");
             System.out.println("core" + i + "active=" + (100 - cpu.getIdleTime(i) + "%"));
         }
 
         //Average idle time
         ArrayList<Integer> idleTimeArray = new ArrayList<>();
-        for (int i = 1; i <= cpu.coresPerSocket(); i++){
+        for (int i = 0; i < cpu.coresPerSocket(); i++){
             idleTimeArray.add(cpu.getIdleTime(i));
             System.out.println(cpu.getIdleTime(i));
         }
@@ -66,7 +66,7 @@ public class SamMclCPU {
 
         // Average user time
         ArrayList<Integer> userTimeArray = new ArrayList<>();
-        for (int i = 1; i <= cpu.coresPerSocket(); i++){
+        for (int i = 0; i < cpu.coresPerSocket(); i++){
             userTimeArray.add(cpu.getUserTime(i));
             System.out.println(cpu.getUserTime(i));
         }
@@ -81,7 +81,7 @@ public class SamMclCPU {
 
         // Average system time
         ArrayList<Integer> systemTimeArray = new ArrayList<>();
-        for (int i = 1; i <= cpu.coresPerSocket(); i++){
+        for (int i = 0; i < cpu.coresPerSocket(); i++){
             systemTimeArray.add(cpu.getSystemTime(i));
             System.out.println(cpu.getSystemTime(i));
         }
@@ -96,7 +96,7 @@ public class SamMclCPU {
 
         // Utilisation Average
         ArrayList<Integer> utilisationAverage = new ArrayList<>();
-        for (int j = 1; j <= cpu.coresPerSocket(); j++) {
+        for (int j = 0; j < cpu.coresPerSocket(); j++) {
             double untilisationPercentage = ((double)(cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)));
             System.out.println("Untilisation percentage for core " + j + " is " + untilisationPercentage + "%");
             utilisationAverage.add(cpu.getIdleTime(j));

@@ -80,14 +80,32 @@ public class gui2_test {
         c.gridy = 0;
         panel1.add(chartPanel, c);
 
-        JLabel cpu_right_info_panel = new JLabel("CPU Info");
-        cpu_right_info_panel.setHorizontalAlignment(JLabel.CENTER);
+
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        JLabel cpu_right_info_text = new JLabel("<html>CPU" + cpu.getModel() + "<br><table cellpadding='5'>"+
+                "<tr><td><font size=-2> Sockets: </font></td><td>" +cpu.socketCount() + " </td></tr>"+
+                "<tr><td><font size=-2> Cores: </font></td><td>" + cpu.coresPerSocket() * cpu.socketCount() + " </td></tr></table></html>");
+        cpu_right_info_text.setHorizontalAlignment(JLabel.CENTER);
         c.weightx = 0.4;
         c.weighty = 0.6;
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
-        panel1.add(cpu_right_info_panel, c);
+        panel1.add(cpu_right_info_text, c);
+
+        JLabel cpu_right_info_text_2 = new JLabel("l1d="+cpu.l1dCacheSize()+
+                ", l1i="+cpu.l1iCacheSize()+
+                ", l2="+cpu.l2CacheSize()+
+                ", l3="+cpu.l3CacheSize());
+
+        cpu_right_info_text_2.setHorizontalAlignment(JLabel.CENTER);
+        c.weightx = 0.4;
+        c.weighty = 0.6;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 1;
+        panel1.add(cpu_right_info_text_2, c);
 
         JLabel cpu_bottom_info_panel = new JLabel("CPU Info");
         cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
@@ -156,6 +174,13 @@ public class gui2_test {
     }
 
     public static void main(final String[] args) {
+
         SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
+        System.loadLibrary("sysinfo");
+        sysInfo info = new sysInfo();
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+
+        //showCPU();
     }
 }

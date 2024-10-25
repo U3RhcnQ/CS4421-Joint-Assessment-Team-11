@@ -21,7 +21,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class gui2_test {
+public class PetrGUI2 {
 
     private static void createAndShowGUI() {
         FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
@@ -208,11 +208,11 @@ public class gui2_test {
 
     public static void main(final String[] args) {
 
-        SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
-        //System.loadLibrary("sysinfo");
-        //sysInfo info = new sysInfo();
-        //cpuInfo cpu = new cpuInfo();
-        //cpu.read(0);
+        SwingUtilities.invokeLater(PetrGUI2::createAndShowGUI);
+        System.loadLibrary("sysinfo");
+        sysInfo info = new sysInfo();
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         //showCPU();
     }

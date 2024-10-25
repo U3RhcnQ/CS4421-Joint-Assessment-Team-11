@@ -1,5 +1,5 @@
 // Main use for USB
-//import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class USBInfo {
@@ -130,6 +130,7 @@ public class paISE {
     // Actual code
 
     public static void patrickUSB() {
+        System.loadLibrary("sysinfo");
         usbInfo usb = new usbInfo();
         usb.read();
         System.out.println("\nThis computer has " + usb.busCount() + " USB buses");
@@ -172,6 +173,7 @@ public class paISE {
 
     public static void main(String[] args) {
 
+        System.loadLibrary("sysinfo");
         patrickUSB();
 
 

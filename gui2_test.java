@@ -119,7 +119,7 @@ public class gui2_test {
 
 
         // Timer to update the chart every second
-        Timer timer = new Timer(0, new ActionListener() {
+        Timer timer = new Timer(10, new ActionListener() {
             int time = 0;
             int counter;
             int sum;

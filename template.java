@@ -4,7 +4,7 @@
  *  Copyright (c) 2024 Mark Burkley (mark.burkley@ul.ie)
  */
 
-public class template
+public class template 
 {
     public static void showPCI()
     {
@@ -44,7 +44,8 @@ public class template
         usbInfo usb = new usbInfo();
         usb.read();
         System.out.println("\nThis machine has "+
-                usb.busCount()+" USB buses ");
+            usb.busCount()+" USB buses ");
+
         // Iterate through all of the USB buses
         for (int i = 1; i <= usb.busCount(); i++) {
             System.out.println("Bus "+i+" has "+
@@ -81,6 +82,28 @@ public class template
         System.out.println("core 1 idle="+cpu.getIdleTime(1)+"%");
     }
 
+    public static void showDisk()
+    {
+        diskInfo disk = new diskInfo();
+        disk.read();
+
+        // Iterate through all of the disks
+        for (int i = 0; i < disk.diskCount(); i++) {
+            System.out.println ("disk "+disk.getName(i)+" has "+
+                disk.getTotal(i)+" blocks, of which "+
+                disk.getUsed(i)+" are used");
+        }
+    }
+
+    public static void showMem()
+    {
+        memInfo mem = new memInfo();
+        mem.read();
+
+        System.out.println ("There is "+mem.getTotal()+" memory of which "+
+            mem.getUsed()+" is used");
+    }
+
     public static void main(String[] args)
     {
         System.loadLibrary("sysinfo");
@@ -91,6 +114,8 @@ public class template
         showCPU();
         showPCI();
         showUSB();
+        showDisk();
+        showMem();
     }
 }
 

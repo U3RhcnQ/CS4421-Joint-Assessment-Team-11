@@ -1,6 +1,34 @@
 // Main use for USB
+//import java.util.ArrayList;
 import java.util.HashMap;
 
+class USBInfo {
+    String bus;
+    String device;
+    String vendorID;
+    String vendorName;
+    String productID;
+    String productDescription;
+
+    public USBInfo(String bus, String device, String vendorID, String vendorName, String productID, String productDescription) {
+        this.bus = bus;
+        this.device = device;
+        this.vendorID = vendorID;
+        this.vendorName = vendorName;
+        this.productID = productID;
+        this.productDescription = productDescription;
+    }
+
+    public void displayInfo() {
+        System.out.println("Bus: " + bus);
+        System.out.println("Device: " + device);
+        System.out.println("Vendor ID: " + vendorID);
+        System.out.println("Vendor Name: " + vendorName);
+        System.out.println("Product ID: " + productID);
+        System.out.println("Product Description: " + productDescription);
+        System.out.println("-------------------------");
+    }
+}
 public class paISE {
 
     // Lookup table for Vendor IDs and Vendor Names

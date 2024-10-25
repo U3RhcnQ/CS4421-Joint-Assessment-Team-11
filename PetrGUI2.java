@@ -63,6 +63,7 @@ public class PetrGUI2 {
         TitleConstraints.fill = GridBagConstraints.HORIZONTAL;
         TitleConstraints.ipadx = 0;
         TitleConstraints.ipady = 30;
+        TitleConstraints.anchor = GridBagConstraints.WEST;  // Align to left
 
         GridBagConstraints TableConstraints = new GridBagConstraints();
         TableConstraints.gridx = 0;
@@ -70,6 +71,16 @@ public class PetrGUI2 {
         TableConstraints.weightx = 1;
         TableConstraints.weighty = 1;
         TableConstraints.fill = GridBagConstraints.BOTH;
+
+        GridBagConstraints RefreshButtonConstraints = new GridBagConstraints();
+        RefreshButtonConstraints.gridx = 0;
+        RefreshButtonConstraints.gridy = 0;
+        RefreshButtonConstraints.weightx = 0;
+        RefreshButtonConstraints.weighty = 0;
+        RefreshButtonConstraints.fill = GridBagConstraints.NONE;
+        RefreshButtonConstraints.ipadx = 0;
+        RefreshButtonConstraints.ipady = 5;
+        RefreshButtonConstraints.anchor = GridBagConstraints.EAST;  // Align to right
 
         // Attempt to load the image and handle exception if not available
         try {
@@ -174,6 +185,9 @@ public class PetrGUI2 {
         JLabel USBTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>USB Info</span> " +
                 "<span style='font-size:11px;'> - Data will automatically refresh every 10 seconds or manually</span></html>");
         USBPanel.add(USBTitle, TitleConstraints);
+
+        JButton USBRefresh = new JButton("Refresh");
+        USBPanel.add(USBRefresh, RefreshButtonConstraints);
 
         // Data to be displayed in the JTable
         String[][] USBData = {

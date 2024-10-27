@@ -8,7 +8,7 @@ public class HashMap_CSV_TJ {
         pciInfo pci_test_tj = new pciInfo();
         pci_test_tj.read();
 
-        System.out.print("Number of buses = " + pci_test_tj.busCount() + "\nYou're welcome :)");
+        System.out.print("Number of buses = " + pci_test_tj.busCount());
 
         // Populate the vendorMap (you could alternatively load from a CSV file)
         vendorMap.put("0x8086", "Intel Corporation");
@@ -24,10 +24,8 @@ public class HashMap_CSV_TJ {
         vendorMap.put("0x80EE", "Oracle Corporation");
 
 
-        // Add more entries as needed
-
         for (int i = 0; i < pci_test_tj.busCount(); i++) {
-            System.out.println("\nBus " + i + " has " + pci_test_tj.deviceCount(i) + " devices... nice");
+            System.out.println("\nBus " + i + " has " + pci_test_tj.deviceCount(i) + " devices");
 
             for (int j = 0; j < 32; j++) {
                 if (pci_test_tj.functionCount(i, j) > 0) {

@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 //Java Events
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -31,6 +33,8 @@ public class PetrGUI2 {
 
         FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
         final JFrame frame = new JFrame("TaskSys"); // Title
+        DefaultTableModel USBTableModel; // Declare the table model
+        DefaultTableModel PCITableModel; // Declare the table model
 
         // Layout
         GridBagConstraints CPUChart = new GridBagConstraints();
@@ -64,6 +68,7 @@ public class PetrGUI2 {
         TitleConstraints.ipadx = 0;
         TitleConstraints.ipady = 30;
         TitleConstraints.anchor = GridBagConstraints.WEST;  // Align to left
+        TitleConstraints.gridwidth = 2;
 
         GridBagConstraints TableConstraints = new GridBagConstraints();
         TableConstraints.gridx = 0;
@@ -71,6 +76,7 @@ public class PetrGUI2 {
         TableConstraints.weightx = 1;
         TableConstraints.weighty = 1;
         TableConstraints.fill = GridBagConstraints.BOTH;
+        TableConstraints.anchor = GridBagConstraints.WEST;  // Align to left
 
         GridBagConstraints RefreshButtonConstraints = new GridBagConstraints();
         RefreshButtonConstraints.gridx = 0;
@@ -81,6 +87,18 @@ public class PetrGUI2 {
         RefreshButtonConstraints.ipadx = 0;
         RefreshButtonConstraints.ipady = 5;
         RefreshButtonConstraints.anchor = GridBagConstraints.EAST;  // Align to right
+        RefreshButtonConstraints.gridwidth = 2;
+
+        GridBagConstraints TextAreaConstraints = new GridBagConstraints();
+        TextAreaConstraints.gridx = 1;
+        TextAreaConstraints.gridy = 1;
+        TextAreaConstraints.weightx = 0.2;
+        TextAreaConstraints.weighty = 1;
+        TextAreaConstraints.fill = GridBagConstraints.BOTH;
+        TextAreaConstraints.ipadx = 0;
+        TextAreaConstraints.ipady = 0;
+        TextAreaConstraints.anchor = GridBagConstraints.EAST;  // Align to right
+        //TextAreaConstraints.insets = new Insets(0, 10, 0, 0);
 
         // Attempt to load the image and handle exception if not available
         try {
@@ -137,7 +155,6 @@ public class PetrGUI2 {
                 "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" +  " </td></tr>" +
                 "<tr><td><font size=-1> L2 Cache: </font></td><td align='center'>" +  " </td></tr>" +
                 "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" +  " </td></tr>" +
-                "" +
                 "</table></html>");
 
         panel1.add(cpu_right_info_text, CPURightInfo);
@@ -199,12 +216,22 @@ public class PetrGUI2 {
         String[] USBColumnNames = { "Bus", "Device", "FFunction", "Vendor ID", "Vendor", "Device ID", "Device" };
 
         // Initializing the JTable
+        USBTableModel = new DefaultTableModel(USBColumnNames, 0); // Initialize the table model
         JTable USBTable = new JTable(USBData, USBColumnNames);
         USBTable.setBounds(30, 40, 200, 300);
 
         // adding it to JScrollPane
         JScrollPane USBScrollPane = new JScrollPane(USBTable);
         USBPanel.add(USBScrollPane, TableConstraints);
+
+        JTextArea USBText = new JTextArea("Please Select a Device to view Details");
+        USBText.setLineWrap(true);               // Enable line wrap
+        USBText.setWrapStyleWord(true);          // Wrap at word boundaries
+        USBText.setEditable(false); // Set non-editable
+        USBText.setPreferredSize(new Dimension(120, USBText.getPreferredSize().height));
+        //USBText.setBorder(new EmptyBorder(10, 10, 10, 10));  // Padding on all sides
+        USBPanel.add(USBText, TextAreaConstraints);
+
         USBPanelWrapper.add(USBPanel);
         tabbedPane.addTab("USB Info", null, USBPanelWrapper,"USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
@@ -242,6 +269,19 @@ public class PetrGUI2 {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+    }
+
+    private static void refreshTable(DefaultTableModel table) {
+        // Get new data (2D array from another function)
+        String[][] newData = getNewData(); // Replace with your function to get new data
+
+        // Clear existing data
+        table.setRowCount(0); // Clear existing rows
+
+        // Add new data to the table model
+        for (String[] row : newData) {
+            table.addRow(row); // Add each row to the table model
+        }
     }
 
     public static void main(final String[] args) {

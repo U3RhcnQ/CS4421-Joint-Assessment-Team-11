@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 //Java Events
 import java.awt.*;
@@ -33,7 +35,7 @@ public class PetrGUI2 {
 
         FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
         final JFrame frame = new JFrame("TaskSys"); // Title
-        DefaultTableModel USBTableModel; // Declare the table model
+        DefaultTableModel USBTableModel = null; // Declare the table model
         DefaultTableModel PCITableModel; // Declare the table model
 
         // Layout
@@ -142,7 +144,7 @@ public class PetrGUI2 {
 
         // Create a panel for the chart
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(200, 200));
+        chartPanel.setPreferredSize(new Dimension(200, 200));
         panel1.add(chartPanel, CPUChart);
 
         JLabel cpu_right_info_text = new JLabel("<html>" +
@@ -217,7 +219,7 @@ public class PetrGUI2 {
 
         // Initializing the JTable
         USBTableModel = new DefaultTableModel(USBColumnNames, 0); // Initialize the table model
-        JTable USBTable = new JTable(USBData, USBColumnNames);
+        JTable USBTable = new JTable(USBTableModel);
         USBTable.setBounds(30, 40, 200, 300);
 
         // adding it to JScrollPane
@@ -232,9 +234,37 @@ public class PetrGUI2 {
         //USBText.setBorder(new EmptyBorder(10, 10, 10, 10));  // Padding on all sides
         USBPanel.add(USBText, TextAreaConstraints);
 
+        // Selection Listener for displaying selected row in USBText
+        USBTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && USBTable.getSelectedRow() != -1) {
+                    // Get selected row index
+                    int selectedRow = USBTable.getSelectedRow();
+
+                    // Display row details in the JTextArea
+                    StringBuilder details = new StringBuilder();
+                    for (int i = 0; i < USBTable.getColumnCount(); i++) {
+                        String columnName = USBTable.getColumnName(i);
+                        Object value = USBTable.getValueAt(selectedRow, i);
+                        details.append(columnName).append(": ").append(value).append("\n");
+                    }
+                    USBText.setText(details.toString());
+                }
+            }
+        });
+
+        DefaultTableModel finalUSBTableModel = USBTableModel;
+        USBRefresh.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                refreshTable(finalUSBTableModel); // Pass the table model to the refresh method
+            }
+        });
+
         USBPanelWrapper.add(USBPanel);
         tabbedPane.addTab("USB Info", null, USBPanelWrapper,"USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
+        refreshTable(USBTableModel);
 
         JPanel panel4 = new JPanel(false);
 
@@ -264,7 +294,7 @@ public class PetrGUI2 {
         frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(tabbedPane);
-        frame.setPreferredSize(new Dimension(800, 600));
+        frame.setPreferredSize(new Dimension(1100, 700));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -273,7 +303,10 @@ public class PetrGUI2 {
 
     private static void refreshTable(DefaultTableModel table) {
         // Get new data (2D array from another function)
-        String[][] newData = getNewData(); // Replace with your function to get new data
+        String[][] newData = {
+                { "3", "Bus 3", "Device 3", "FFunction 3", "Vendor 3", "4321", "Device Name 3" },
+                { "4", "Bus 4", "Device 4", "FFunction 4", "Vendor 4", "8765", "Device Name 4" }
+        }; // Replace with your function to get new data
 
         // Clear existing data
         table.setRowCount(0); // Clear existing rows

@@ -2,14 +2,21 @@ import java.util.ArrayList;
 
 public class SamMclCPU {
     public static void main(String[] args) {
-
+        modelEtc();
+        cacheSizes();
+        idleTimes();
+        averageIdleTimes();
+        averageSystemTimes();
+        averageUserTimes();
+        utilisationTime();
+    }
+    public static void modelEtc(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
 
         String model = cpu.getModel();
         Integer cpuCores = cpu.coresPerSocket();
-
 
         if(model.length() == 39){
             String subModel = model.substring(31,34);
@@ -29,16 +36,24 @@ public class SamMclCPU {
                     cpu.socketCount() + " sockets each with " +
                     cpu.coresPerSocket() + " cores" + (cpu.coresPerSocket()*2) + "logical cores, has hyperthreading enabled and a base speed of " + baseSpeed1);
         }
+    }
 
-
+    public static void cacheSizes(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         // Show sizes of L1,L2 and L3 cache
         System.out.println("l1d=" + (cpu.l1dCacheSize()*0.001) +
                 ", l1i=" + (cpu.l1iCacheSize()*0.001) +
                 ", l2=" + (cpu.l2CacheSize()*0.000001) +
                 ", l3=" + (cpu.l3CacheSize()*0.000001));
+    }
 
-
+    public static void idleTimes (){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         // Sleep for 1 second and display the idle time percentage for
         // core 1.  This assumes 10Hz so in one second we have 100
@@ -49,6 +64,12 @@ public class SamMclCPU {
             System.out.println("core" + i + "idle=" + cpu.getIdleTime(i) + "%");
             System.out.println("core" + i + "active=" + (100 - cpu.getIdleTime(i) + "%"));
         }
+    }
+
+    public static void averageIdleTimes(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         //Average idle time
         ArrayList<Integer> idleTimeArray = new ArrayList<>();
@@ -62,7 +83,12 @@ public class SamMclCPU {
         }
         double idleTimeAverage = sum / cpu.coresPerSocket();
         System.out.println(idleTimeAverage);
+    }
 
+    public static void averageUserTimes(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         // Average user time
         ArrayList<Integer> userTimeArray = new ArrayList<>();
@@ -77,7 +103,12 @@ public class SamMclCPU {
         }
         double userTimeAverage = sum1 / cpu.coresPerSocket();
         System.out.println(userTimeAverage);
+    }
 
+    public static void averageSystemTimes(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         // Average system time
         ArrayList<Integer> systemTimeArray = new ArrayList<>();
@@ -92,7 +123,12 @@ public class SamMclCPU {
         }
         double systemTimeAverage = sum2 / cpu.coresPerSocket();
         System.out.println(systemTimeAverage);
+    }
 
+    public static void utilisationTime(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
 
         // Utilisation Average
         ArrayList<Integer> utilisationAverage = new ArrayList<>();
@@ -102,6 +138,5 @@ public class SamMclCPU {
             utilisationAverage.add(cpu.getIdleTime(j));
         }
         System.out.println(utilisationAverage);
-
     }
 }

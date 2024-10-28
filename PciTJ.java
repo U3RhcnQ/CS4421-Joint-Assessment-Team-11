@@ -2,10 +2,11 @@ import java.util.HashMap;
 
 public class PciTJ {
 
-    private static HashMap<String, String> vendorMap = new HashMap<>();
-    private static HashMap<String, String> productMap = new HashMap<>();
+    private pciInfo pci = new pciInfo(); //created an instance of pciInfo class
+    private HashMap<String, String> vendorMap = new HashMap<>();
+    private HashMap<String, String> productMap = new HashMap<>();
 
-    private static void loadVendorMap() {
+    private void loadVendorMap() {
         vendorMap.put("0x8086", "Intel Corporation"); //declare that I used chatgpt to list the most common vendor ids and corresponding company name
         vendorMap.put("0x10DE", "NVIDIA Corporation");
         vendorMap.put("0x1414", "Microsoft Corporation");
@@ -52,7 +53,7 @@ public class PciTJ {
 
     }
 
-    private static void loadProductMap() {
+    private void loadProductMap() {
         productMap.put("0x5917", "Intel UHD Graphics 620");
         productMap.put("0x9D71", "Intel Integrated Sensor Hub");
         productMap.put("0xA2A1", "Intel Management Engine Interface");
@@ -89,8 +90,7 @@ public class PciTJ {
     }
 
     // Collects PCI information and returns as string
-    public static String[][] getPCIInfo() { // this function returning 2d string array
-        pciInfo pci = new pciInfo(); //created an instance of pciInfo class
+    public String[][] getPCIInfo() { // this function returning 2d string array
         pci.read();
 
         loadVendorMap();//basically ensures that vendorMap hashmap is fully populated and ready to use.
@@ -132,12 +132,6 @@ public class PciTJ {
             }
         }
         return pciFunctionArray;
-    }
-
-    public static void main(String[] args) {
-        System.loadLibrary("sysinfo");
-        String[][] pciInfo = getPCIInfo(); // Call the method and store the result in a variable
-        System.out.println(pciInfo);//idk if this passes to gui. i assume just console
     }
 }
 

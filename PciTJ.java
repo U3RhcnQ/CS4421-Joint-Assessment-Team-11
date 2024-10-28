@@ -2,9 +2,14 @@ import java.util.HashMap;
 
 public class PciTJ {
 
-    private pciInfo pci = new pciInfo(); //created an instance of pciInfo class
+    
+    private pciInfo pci;
     private HashMap<String, String> vendorMap = new HashMap<>();
     private HashMap<String, String> productMap = new HashMap<>();
+
+    public PciTJ(){
+        this.pci = new pciInfo();
+    }
 
     private void loadVendorMap() {
         vendorMap.put("0x8086", "Intel Corporation"); //declare that I used chatgpt to list the most common vendor ids and corresponding company name
@@ -127,6 +132,9 @@ public class PciTJ {
 
                         rowIndex++;
 
+                    }
+                    else{
+                        continue;
                     }
                 }
             }

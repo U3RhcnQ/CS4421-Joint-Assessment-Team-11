@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class PciTJ {
 
@@ -94,52 +96,41 @@ public class PciTJ {
 
     }
 
-    // Collects PCI information and returns as string
-    public String[][] getPCIInfo() { // this function returning 2d string array
+    public String[][] getPCIInfo() {
         pci.read();
+        loadVendorMap();
+        loadProductMap();
 
-        loadVendorMap();//basically ensures that vendorMap hashmap is fully populated and ready to use.
-        loadProductMap();//generally it's just a good thing to do before processing all the pci information
+        List<String[]> pciFunctionList = new ArrayList<>();  // Use ArrayList for dynamic sizing
 
-        String[][] pciFunctionArray = new String[pci.totalFunctionCount()][7];
-
-        int rowIndex = 0;
-
-        for (int i = 0; i < pci.busCount(); i++) { // Iterate through each bus
-
-            for (int j = 0; j < pci.deviceCount(i); j++) { // Iterate through each device until at last device count
-
-                for (int k = 0; k < pci.functionCount(i, j); k++) { // Iterate through each function
-                    if (pci.functionPresent(i, j, k) > 0) { //sees if a function is present. i.e. if a function is present then...
-
-                        String vendorId = String.format("0x%04X", pci.vendorID(i, j, k));// a method that returns the vendorid of function k on device j on bus i
-                        String productId = String.format("0x%04X", pci.productID(i, j, k));//ditto but w product id
-
-                        //attempts to find a name for vendorId in the vendorMap.//otherwise it defaults to unknown vendor
-                        String vendorName = vendorMap.getOrDefault(vendorId, "Unknown Vendor");//basically: get = attempts to retrieve the value associated with a specified key.(vendorId)
+        for (int i = 0; i < pci.busCount(); i++) {  // Iterate through each bus
+            for (int j = 0; j < pci.deviceCount(i); j++) {  // Iterate through each device
+                for (int k = 0; k < pci.functionCount(i, j); k++) {  // Iterate through each function
+                    if (pci.functionPresent(i, j, k) > 0) {  // Check if function is present
+                        String vendorId = String.format("0x%04X", pci.vendorID(i, j, k));
+                        String productId = String.format("0x%04X", pci.productID(i, j, k));
+                        String vendorName = vendorMap.getOrDefault(vendorId, "Unknown Vendor");
                         String productName = productMap.getOrDefault(productId, "Unknown Product");
-                        //If the key is present in the map, it returns the corresponding value.
 
-                        pciFunctionArray[rowIndex] = new String[]{
-                                String.valueOf(i),                       // Bus number
-                                String.valueOf(j),                       // Device number
-                                String.valueOf(k),                       // Function number
-                                vendorId,                                // Vendor ID in hex
-                                vendorName,                              // Vendor name
-                                productId,                               // Product ID in hex
-                                productName                              // Product description
-                        };
-
-                        rowIndex++;
-
-                    }
-                    else{
-                        continue;
+                        pciFunctionList.add(new String[]{
+                                String.valueOf(i),         // Bus number
+                                String.valueOf(j),         // Device number
+                                String.valueOf(k),         // Function number
+                                vendorId,                  // Vendor ID in hex
+                                vendorName,                // Vendor name
+                                productId,                 // Product ID in hex
+                                productName                // Product description
+                        });
                     }
                 }
             }
         }
-        return pciFunctionArray;
+
+        // Convert the ArrayList to a String[][] array
+        return pciFunctionList.toArray(new String[0][0]);
     }
+
+
+
 }
 

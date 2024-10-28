@@ -94,9 +94,10 @@ public class PciTJ {
         productMap.put("0x0405", "USB product identifier");
         productMap.put("0x15AD", "VMware");
         productMap.put("0x80EE", "Oracle Corporation");
-        productMap.put("0x106B", "Apple Inc. ");
+        productMap.put("0x106B", "Apple Inc.");
         productMap.put("0x0000", "PlaceHolder");
         productMap.put("0x0001", "PlaceHolder");
+        productMap.put("0x8086", "Intel");
 
 
 

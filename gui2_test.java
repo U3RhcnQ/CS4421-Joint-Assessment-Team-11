@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 // Java Charting Library
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -32,6 +32,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class gui2_test {
 
     private static patricktest usb;
+    private static PciTJ pci;
 
     private static void createAndShowGUI() {
 
@@ -210,12 +211,6 @@ public class gui2_test {
         JButton USBRefresh = new JButton("Refresh");
         USBPanel.add(USBRefresh, RefreshButtonConstraints);
 
-        // Data to be displayed in the JTable
-        String[][] USBData = {
-                { "Kundan Kumar Jha", "4031", "CSE", "1", "2", "3", "4" },
-                { "Kundan Kumar Jha", "4031", "CSE", "1", "2", "3", "4"}
-        };
-
         // Column Names
         String[] USBColumnNames = { "Bus", "Device", "FFunction", "Vendor ID", "Vendor", "Device ID", "Device" };
 
@@ -259,38 +254,82 @@ public class gui2_test {
         DefaultTableModel finalUSBTableModel = USBTableModel;
         USBRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                refreshTable(finalUSBTableModel); // Pass the table model to the refresh method
+                refreshTable(finalUSBTableModel, usb.getUSBInfoAs2DArray()); // Pass the table model to the refresh method
             }
         });
 
         USBPanelWrapper.add(USBPanel);
         tabbedPane.addTab("USB Info", null, USBPanelWrapper,"USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
-        refreshTable(USBTableModel);
+        refreshTable(USBTableModel, usb.getUSBInfoAs2DArray()); // Fetch Initial Data for USB
 
-        JPanel panel4 = new JPanel(false);
 
-        // Data to be displayed in the JTable
-        String[][] data = {
-                { "Kundan Kumar Jha", "4031", "CSE", "1", "2", "3", "4" },
-                { "Kundan Kumar Jha", "4031", "CSE", "1", "2", "3", "4"}
-        };
+        // PCI Screen
+        JPanel PCIPanelWrapper = new JPanel(new BorderLayout());
+        PCIPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        JPanel PCIPanel = new JPanel(new GridBagLayout());
+        JLabel PCITitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>PCI Info</span> " +
+                "<span style='font-size:11px;'> - Data will automatically refresh every 10 seconds or manually</span></html>");
+        PCIPanel.add(PCITitle, TitleConstraints);
+
+        JButton PCIRefresh = new JButton("Refresh");
+        PCIPanel.add(PCIRefresh, RefreshButtonConstraints);
 
         // Column Names
-        String[] columnNames = { "Bus", "Device", "FFunction", "Vendor ID", "Vendor", "Device ID", "Device" };
+        String[] PCIColumnNames = { "Bus", "Device", "Function", "Vendor ID", "Vendor", "Device ID", "Device" };
 
         // Initializing the JTable
-        JTable table1 = new JTable(data, columnNames);
-        table1.setBounds(30, 40, 200, 300);
+        PCITableModel = new DefaultTableModel(PCIColumnNames, 0); // Initialize the table model
+        JTable PCITable = new JTable(PCITableModel);
+        PCITable.setBounds(30, 40, 200, 300);
 
         // adding it to JScrollPane
-        JScrollPane sp = new JScrollPane(table1);
+        JScrollPane PCIScrollPane = new JScrollPane(PCITable);
+        PCIPanel.add(PCIScrollPane, TableConstraints);
 
-        JLabel filler4 = new JLabel("PCI Info");
-        filler4.setHorizontalAlignment(JLabel.CENTER);
-        panel4.setLayout(new GridLayout(1, 1));
-        panel4.add(sp);
-        tabbedPane.addTab("PCI Info", null, panel4,"PCI Info");
+        JTextArea PCIText = new JTextArea("Please Select a Device to view Details");
+        PCIText.setLineWrap(true);               // Enable line wrap
+        PCIText.setWrapStyleWord(true);          // Wrap at word boundaries
+        PCIText.setEditable(false); // Set non-editable
+        PCIText.setPreferredSize(new Dimension(120, PCIText.getPreferredSize().height));
+        //PCIText.setBorder(new EmptyBorder(10, 10, 10, 10));  // Padding on all sides
+        PCIPanel.add(PCIText, TextAreaConstraints);
+
+        // Selection Listener for displaying selected row in PCIText
+        PCITable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && PCITable.getSelectedRow() != -1) {
+                    // Get selected row index
+                    int selectedRow = PCITable.getSelectedRow();
+
+                    // Display row details in the JTextArea
+                    StringBuilder details = new StringBuilder();
+                    for (int i = 0; i < PCITable.getColumnCount(); i++) {
+                        String columnName = PCITable.getColumnName(i);
+                        Object value = PCITable.getValueAt(selectedRow, i);
+                        details.append(columnName).append(": ").append(value).append("\n");
+                    }
+                    PCIText.setText(details.toString());
+                }
+            }
+        });
+
+        DefaultTableModel finalPCITableModel = PCITableModel;
+        PCIRefresh.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.print(Arrays.deepToString(pci.getPCIInfo()));
+                refreshTable(finalPCITableModel, pci.getPCIInfo()); // Pass the table model to the refresh method
+            }
+        });
+
+        PCIPanelWrapper.add(PCIPanel);
+        tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
+        refreshTable(PCITableModel, pci.getPCIInfo()); // Fetch Initial Data for PCI
+        
+
+        tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
 
         frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -303,9 +342,9 @@ public class gui2_test {
 
     }
 
-    private static void refreshTable(DefaultTableModel table) {
+    private static void refreshTable(DefaultTableModel table, String[][] newData ) {
         // Get new data (2D array from another function)
-        String[][] newData = usb.getUSBInfoAs2DArray();
+
         // Replace with your function to get new data
 
         // Clear existing data
@@ -324,6 +363,7 @@ public class gui2_test {
         sysInfo info = new sysInfo();
         cpuInfo cpu = new cpuInfo();
         usb = new patricktest();
+        pci = new PciTJ();
         cpu.read(0);
     }
 }

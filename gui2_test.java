@@ -119,15 +119,15 @@ public class gui2_test {
         JTabbedPane tabbedPane = new JTabbedPane(); // Create The tabbed Pane
 
         // Add the First Panel
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridBagLayout());
+        JPanel CPUPanelWrapper = new JPanel(new BorderLayout());
+        CPUPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        JPanel CPUpanel = new JPanel();
+        CPUpanel.setLayout(new GridBagLayout());
 
         // Chart Code
         XYSeries series;
-
         // Create a series to hold the data
         series = new XYSeries("");
-
         // Create a dataset and add the series to it
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
@@ -149,7 +149,7 @@ public class gui2_test {
         // Create a panel for the chart
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(200, 200));
-        panel1.add(chartPanel, CPUChart);
+        CPUpanel.add(chartPanel, CPUChart);
 
         JLabel cpu_right_info_text = new JLabel("<html>" +
                 "<font size=-1>" + "</font><br><br>" +
@@ -163,11 +163,11 @@ public class gui2_test {
                 "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel3()) + " <font size=-2> MB </font></td></tr>" +
                 "</table></html>");
 
-        panel1.add(cpu_right_info_text, CPURightInfo);
-
+        CPUpanel.add(cpu_right_info_text, CPURightInfo);
+        CPUPanelWrapper.add(CPUpanel);
         JLabel cpu_bottom_info_panel = new JLabel("CPU Info");
         cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
-        panel1.add(cpu_bottom_info_panel, CPUBottomInfo);
+        CPUpanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
         // Timer to update the chart every second
         Timer timer = new Timer(10, new ActionListener() {
@@ -179,7 +179,7 @@ public class gui2_test {
             public void actionPerformed(ActionEvent e) {
 
                 // Add Data
-                series.add(time, SamMclCPU.utilisationTime());
+                //series.add(time, SamMclCPU.utilisationTime());
                 time++;
 
                 // Check if the series has more than 60 entries, remove the oldest if true
@@ -191,7 +191,7 @@ public class gui2_test {
         timer.start();
 
 
-        tabbedPane.addTab("CPU Info", null, panel1,"CPU Info");
+        tabbedPane.addTab("CPU Info", null, CPUPanelWrapper,"CPU Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
 

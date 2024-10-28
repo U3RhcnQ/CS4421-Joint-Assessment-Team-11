@@ -10,6 +10,11 @@ public class SamMclCPU {
         averageUserTimes();
         utilisationTime();
     }
+
+
+    // TODO I need you to give me a call to get cores, logical cores and cpu information one by one like i did with the cache
+    // Very Important do not use print statements and make sure return is not void I can't use it otherwise at all
+
     public static void modelEtc(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
@@ -38,6 +43,7 @@ public class SamMclCPU {
         }
     }
 
+    // Overall cache Size Call
     public static void cacheSizes(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
@@ -49,6 +55,43 @@ public class SamMclCPU {
                 ", l2=" + (cpu.l2CacheSize()*0.000001) +
                 ", l3=" + (cpu.l3CacheSize()*0.000001));
     }
+
+    // Individual Calls for formatting reasons
+    public static double cacheSizel1d(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return (double) cpu.l1dCacheSize()*0.001;
+    }
+
+    public static double cacheSizel1i(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return (double) cpu.l1iCacheSize()*0.001;
+    }
+
+    public static double cacheSizel1(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return (double) cpu.l1iCacheSize()*0.001 + cpu.l1dCacheSize()*0.001; // To get total L1 cache we add both
+    }
+
+    public static double cacheSizel2(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return (double) cpu.l2CacheSize()*0.000001;
+    }
+
+    public static double cacheSizel3(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return (double) cpu.l3CacheSize()*0.000001;
+    }
+
 
     public static void idleTimes (){
         System.loadLibrary("sysInfo");
@@ -66,7 +109,7 @@ public class SamMclCPU {
         }
     }
 
-    public static void averageIdleTimes(){
+    public static double averageIdleTimes(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
@@ -82,10 +125,12 @@ public class SamMclCPU {
             sum += idleTimeArray.get(a);
         }
         double idleTimeAverage = sum / cpu.coresPerSocket();
-        System.out.println(idleTimeAverage);
+        //System.out.println(idleTimeAverage);
+
+        return idleTimeAverage;
     }
 
-    public static void averageUserTimes(){
+    public static double averageUserTimes(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
@@ -102,10 +147,12 @@ public class SamMclCPU {
             sum1 += userTimeArray.get(a);
         }
         double userTimeAverage = sum1 / cpu.coresPerSocket();
-        System.out.println(userTimeAverage);
+        //System.out.println(userTimeAverage);
+
+        return userTimeAverage;
     }
 
-    public static void averageSystemTimes(){
+    public static double averageSystemTimes(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
@@ -122,21 +169,30 @@ public class SamMclCPU {
             sum2 += systemTimeArray.get(a);
         }
         double systemTimeAverage = sum2 / cpu.coresPerSocket();
-        System.out.println(systemTimeAverage);
+
+        //System.out.println(systemTimeAverage);
+        return systemTimeAverage;
     }
 
-    public static void utilisationTime(){
+    public static double utilisationTime(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
 
         // Utilisation Average
         ArrayList<Integer> utilisationAverage = new ArrayList<>();
+        double sum3 = 0;
+
         for (int j = 0; j < cpu.coresPerSocket(); j++) {
-            double untilisationPercentage = ((double)(cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)));
-            System.out.println("Untilisation percentage for core " + j + " is " + untilisationPercentage + "%");
+            double utilisationPercentage = ((double)(cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)));
+            System.out.println("Untilisation percentage for core " + j + " is " + utilisationPercentage + "%");
+
             utilisationAverage.add(cpu.getIdleTime(j));
+            sum3 += utilisationPercentage;
+
         }
-        System.out.println(utilisationAverage);
+        //System.out.println(utilisationAverage);
+
+        return sum3;
     }
 }

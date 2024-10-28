@@ -33,6 +33,7 @@ public class gui2_test {
 
     private static patricktest usb;
     private static PciTJ pci;
+    private static SamMclCPU cpu;
 
     private static void createAndShowGUI() {
 
@@ -361,9 +362,9 @@ public class gui2_test {
         SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
         System.loadLibrary("sysinfo");
         sysInfo info = new sysInfo();
-        cpuInfo cpu = new cpuInfo();
         usb = new patricktest();
         pci = new PciTJ();
-        cpu.read(0);
+        //cpu = new SamMclCPU();
+
     }
 }

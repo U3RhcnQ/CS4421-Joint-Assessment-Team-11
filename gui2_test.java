@@ -156,11 +156,11 @@ public class gui2_test {
                 "<table cellpadding='5' align='center'>"+
                 "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + " </td></tr>"+
                 "<tr><td><font size=-1> Cores: </font></td><td align='center'>" +  " </td></tr>" +
-                "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" +  " </td></tr>" +
-                "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + " </td></tr>" +
-                "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" +  " </td></tr>" +
-                "<tr><td><font size=-1> L2 Cache: </font></td><td align='center'>" +  " </td></tr>" +
-                "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" +  " </td></tr>" +
+                "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + SamMclCPU.cacheSizel1d() +  " </td></tr>" +
+                "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + SamMclCPU.cacheSizel1i() + " </td></tr>" +
+                "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" + SamMclCPU.cacheSizel1() + " </td></tr>" +
+                "<tr><td><font size=-1> L2 Cache: </font></td><td align='center'>" + SamMclCPU.cacheSizel2() + " </td></tr>" +
+                "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" + SamMclCPU.cacheSizel3() + " </td></tr>" +
                 "</table></html>");
 
         panel1.add(cpu_right_info_text, CPURightInfo);

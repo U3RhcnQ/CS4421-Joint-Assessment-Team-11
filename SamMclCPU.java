@@ -71,11 +71,18 @@ public class SamMclCPU {
         return (double) cpu.l1iCacheSize()*0.001;
     }
 
+    public static double cacheSizel1(){
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return (double) cpu.l1iCacheSize()*0.001;
+    }
+
     public static double cacheSizel2(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
-        return (double) cpu.l2CacheSize()*0.000001;
+        return (double) cpu.l1iCacheSize()*0.001 + cpu.l1dCacheSize()*0.001; // To get total L1 cahce add the values
     }
 
     public static double cacheSizel3(){

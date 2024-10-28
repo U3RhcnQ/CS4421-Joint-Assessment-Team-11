@@ -18,7 +18,6 @@ public class PciTJ {
         vendorMap.put("0x10DE", "NVIDIA Corporation");
         vendorMap.put("0x1414", "Microsoft Corporation");
         vendorMap.put("0x106B", "Apple Corporation");
-        vendorMap.put("0x046D", "Logitech Corporation");
         vendorMap.put("0x1043", "Asus Corporation");
         vendorMap.put("0x17AA", "Lenovo Corporation");
         vendorMap.put("0x1028", "Dell Corporation");
@@ -50,13 +49,15 @@ public class PciTJ {
         vendorMap.put("0x5986", "Acer Inc.");
         vendorMap.put("0x05E3", "Genesys Logic, Inc.");
         vendorMap.put("0x0C45", "Sonix Technology Co., Ltd.");
-        vendorMap.put("0x413C", "Dell Inc.");
         vendorMap.put("0x17EF", "Lenovo Group Limited");
         vendorMap.put("0x12D1", "Huawei Technologies Co., Ltd.");
         vendorMap.put("0x19D2", "ZTE Corporation");
         vendorMap.put("0x0489", "Foxconn / Hon Hai");
         vendorMap.put("0x1B96", "Pegatron Corporation");
+        vendorMap.put("0x0001", "unassigned vendor");
+        vendorMap.put("0x0000 ", "unassigned vendor");
         vendorMap.put("0x15AD", "VMware");
+
 
     }
 
@@ -83,15 +84,22 @@ public class PciTJ {
         productMap.put("0x1237", "Intel 82440FX PCI and Memory Controller (Natoma)");
         productMap.put("0x7000", "Intel 82371SB PIIX3 ISA Bridge");
         productMap.put("0x7111", "Intel 82371AB/EB/MB PIIX4 IDE Controller");
-        productMap.put("0x0405", "Unknown Product");
         productMap.put("0x100E", "Intel 82540EM Gigabit Ethernet Controller");
         productMap.put("0xCAFE", "Placeholder/Development ID");
         productMap.put("0x2415", "Intel 82801AA AC'97 Audio Controller");
-        productMap.put("0x003F", "Unknown Product");
+        productMap.put("0x003F", "Realtek");
         productMap.put("0x7113", "Intel 82371AB/EB/MB PIIX4 ACPI Controller");
         productMap.put("0x265C", "Unknown Product");
         productMap.put("0x2829", "Intel 82801HBM/HEM SATA AHCI Controller (ICH8M)");
         productMap.put("0x0405", "USB product identifier");
+        productMap.put("0x15AD", "VMware");
+        productMap.put("0x80EE", "Oracle Corporation");
+        productMap.put("0x106B", "Apple Inc. ");
+        productMap.put("0x0000", "PlaceHolder");
+        productMap.put("0x0001", "PlaceHolder");
+
+
+
 
 
     }

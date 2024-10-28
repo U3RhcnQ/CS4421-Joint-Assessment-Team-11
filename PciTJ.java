@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class Pci_TJ {
+public class PciTJ {
 
     private static HashMap<String, String> vendorMap = new HashMap<>();
     private static HashMap<String, String> productMap = new HashMap<>();
@@ -50,9 +50,9 @@ public class Pci_TJ {
         vendorMap.put("0x1B96", "Pegatron Corporation");
         vendorMap.put("0x15AD", "VMware");
 
-
     }
-    private static  void loadProductMap(){
+
+    private static void loadProductMap() {
         productMap.put("0x5917", "Intel UHD Graphics 620");
         productMap.put("0x9D71", "Intel Integrated Sensor Hub");
         productMap.put("0xA2A1", "Intel Management Engine Interface");
@@ -89,57 +89,55 @@ public class Pci_TJ {
     }
 
     // Collects PCI information and returns as string
-    public static String getPCIInfo() {
+    public static String[][] getPCIInfo() { // this function returning 2d string array
         pciInfo pci = new pciInfo(); //created an instance of pciInfo class
         pci.read();
-
-        StringBuilder pciInfoOutput = new StringBuilder();
-        int busCount = pci.busCount();
-        pciInfoOutput.append("System PCI Information:\n"); //append basically adds the exact string to the end of whatever is currently in pciInfoOutput
-        pciInfoOutput.append("Total Number of Buses: ").append(busCount).append("\n");
-        pciInfoOutput.append("-------------------------------------\n");
 
         loadVendorMap();//basically ensures that vendorMap hashmap is fully populated and ready to use.
         loadProductMap();//generally it's just a good thing to do before processing all the pci information
 
-        for (int i = 0; i < busCount; i++) { // Iterate through each bus
-            int deviceCount = pci.deviceCount(i); //pci.deviceCount(i) = returns the amount of devices on the  (ith bus) corresponding number i bus.
-            pciInfoOutput.append("\nBus ").append(i).append(" Information:\n");
-            pciInfoOutput.append("Total Devices on Bus ").append(i).append(": ").append(deviceCount).append("\n");
+        String[][] pciFunctionArray = new String[pci.totalFunctionCount()][7];
 
-            for (int j = 0; j < deviceCount; j++) { // Iterate through each device until at last device count
-                int functionCount = pci.functionCount(i, j); // returns the amount of functions on the jth device on the ith bus
-                if (functionCount > 0) {
-                    pciInfoOutput.append("Device ").append(j).append(" has ").append(functionCount).append(" functions\n");
+        int rowIndex = 0;
 
-                    for (int k = 0; k < functionCount; k++) { // Iterate through each function
-                        if (pci.functionPresent(i, j, k) > 0) { //sees if a function is present. i.e. if a function is present then...
+        for (int i = 0; i < pci.busCount(); i++) { // Iterate through each bus
 
-                            String vendorId = String.format("0x%04X", pci.vendorID(i, j, k));// a method that returns the vendorid of function k on device j on bus i
-                            String productId = String.format("0x%04X", pci.productID(i, j, k));//ditto but w product id
+            for (int j = 0; j < pci.deviceCount(i); j++) { // Iterate through each device until at last device count
 
-                            //attempts to find a name for vendorId in the vendorMap.//otherwise it defaults to unknown vendor
-                            String vendorName = vendorMap.getOrDefault(vendorId, "Unknown Vendor");//basically: get = attempts to retrieve the value associated with a specified key.(vendorId)
-                            String productName = productMap.getOrDefault(productId, "Unkown Product");
-                                                                                                                            //If the key is present in the map, it returns the corresponding value.
-                            pciInfoOutput.append("Function ").append(k).append(":\n");
-                            pciInfoOutput.append("Vendor ID: ").append(vendorId).append(" (").append(vendorName).append(")\n");
-                            pciInfoOutput.append("Product ID: ").append(productId).append(" (").append(productName).append("\n");
-                        }
+                for (int k = 0; k < pci.functionCount(i, j); k++) { // Iterate through each function
+                    if (pci.functionPresent(i, j, k) > 0) { //sees if a function is present. i.e. if a function is present then...
+
+                        String vendorId = String.format("0x%04X", pci.vendorID(i, j, k));// a method that returns the vendorid of function k on device j on bus i
+                        String productId = String.format("0x%04X", pci.productID(i, j, k));//ditto but w product id
+
+                        //attempts to find a name for vendorId in the vendorMap.//otherwise it defaults to unknown vendor
+                        String vendorName = vendorMap.getOrDefault(vendorId, "Unknown Vendor");//basically: get = attempts to retrieve the value associated with a specified key.(vendorId)
+                        String productName = productMap.getOrDefault(productId, "Unknown Product");
+                        //If the key is present in the map, it returns the corresponding value.
+
+                        pciFunctionArray[rowIndex] = new String[]{
+                                String.valueOf(i),                       // Bus number
+                                String.valueOf(j),                       // Device number
+                                String.valueOf(k),                       // Function number
+                                vendorId,                                // Vendor ID in hex
+                                vendorName,                              // Vendor name
+                                productId,                               // Product ID in hex
+                                productName                              // Product description
+                        };
+
+                        rowIndex++;
+
                     }
-                } else {
-                    pciInfoOutput.append("Device ").append(j).append(" has no functions.\n");
                 }
             }
-            pciInfoOutput.append("-------------------------------------\n");
         }
-
-        return pciInfoOutput.toString(); // Returns the formatted PCI information as a String
+        return pciFunctionArray;
     }
 
     public static void main(String[] args) {
         System.loadLibrary("sysinfo");
-        String pciInfo = getPCIInfo(); // Call the method and store the result in a variable
+        String[][] pciInfo = getPCIInfo(); // Call the method and store the result in a variable
         System.out.println(pciInfo);//idk if this passes to gui. i assume just console
     }
 }
+

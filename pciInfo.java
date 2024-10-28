@@ -18,6 +18,18 @@ public class pciInfo
     // Return the number of functions in a PCI device
     public native int functionCount (int bus, int device);
 
+    public int totalFunctionCount(){
+        int totalFunctionCount = 0;
+
+        for (int i = 0; i < busCount(); i++) { // Iterate through each bus
+
+            for (int j = 0; j < deviceCount(i); j++) { // Iterate through each device until at last device count
+                    totalFunctionCount += functionCount(i, j);
+            }
+        }
+        return totalFunctionCount;
+    }
+
     // Return the number of functions in a PCI device
     public native int functionPresent (int bus, int device, int function);
 

@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class SamDiskInfo {
     public static void main(String[] args){
+        System.loadLibrary("sysinfo"); // PLease add the library it's important
         percentUsed();
         diskBlocks();
         diskNames();

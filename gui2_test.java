@@ -210,6 +210,7 @@ public class gui2_test {
 
         SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
         System.loadLibrary("sysinfo");
+        usbInfo USB = new usbInfo();
         sysInfo info = new sysInfo();
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);

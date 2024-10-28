@@ -178,10 +178,14 @@ public class gui2_test {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                //cores = cpu.coresPerSocket();
-                //cpu.read(1);
+                // Add Data
+                series.add(time, SamMclCPU.utilisationTime());
                 time++;
 
+                // Check if the series has more than 60 entries, remove the oldest if true
+                if (series.getItemCount() > 60) {
+                    series.remove(0); // Remove the first (oldest) entry
+                }
             }
         });
         timer.start();

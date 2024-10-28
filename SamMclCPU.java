@@ -57,39 +57,39 @@ public class SamMclCPU {
     }
 
     // Individual Calls for formatting reasons
-    public static double cacheSizel1d(){
+    public static int cacheSizel1d(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
-        return (double) cpu.l1dCacheSize()*0.001;
+        return (int) Math.round(cpu.l1dCacheSize()*0.001);
     }
 
-    public static double cacheSizel1i(){
+    public static int cacheSizel1i(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
-        return (double) cpu.l1iCacheSize()*0.001;
+        return (int) Math.round(cpu.l1iCacheSize()*0.001);
     }
 
-    public static double cacheSizel1(){
+    public static int cacheSizel1(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
-        return (double) cpu.l1iCacheSize()*0.001 + cpu.l1dCacheSize()*0.001; // To get total L1 cache we add both
+        return (int) Math.round(cpu.l1iCacheSize()*0.001 + cpu.l1dCacheSize()*0.001); // To get total L1 cache we add both
     }
 
-    public static double cacheSizel2(){
+    public static int cacheSizel2(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
-        return (double) cpu.l2CacheSize()*0.000001;
+        return (int) Math.round(cpu.l2CacheSize()*0.000001);
     }
 
-    public static double cacheSizel3(){
+    public static int cacheSizel3(){
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
-        return (double) cpu.l3CacheSize()*0.000001;
+        return (int) Math.round(cpu.l3CacheSize()*0.000001);
     }
 
 

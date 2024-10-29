@@ -61,9 +61,10 @@ public class gui2_test {
         GridBagConstraints CPURightInfo = new GridBagConstraints();
         CPURightInfo.weightx = 0.1;
         CPURightInfo.weighty = 0.6;
-        CPURightInfo.fill = GridBagConstraints.NONE;
+        CPURightInfo.fill = GridBagConstraints.VERTICAL;
         CPURightInfo.gridx = 1;
         CPURightInfo.gridy = 1;
+        CPURightInfo.anchor = GridBagConstraints.WEST;
 
         GridBagConstraints CPUBottomInfo = new GridBagConstraints();
         CPUBottomInfo.weightx = 1.0;
@@ -195,7 +196,7 @@ public class gui2_test {
         CPUPanelWrapper.add(CPUPanel);
         JLabel cpu_bottom_info_panel = new JLabel("CPU Info");
         cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
-        CPUPanel.add(cpu_bottom_info_panel, CPUBottomInfo);
+        //CPUPanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
         tabbedPane.addTab("CPU Info", null, CPUPanelWrapper,"CPU Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -236,17 +237,12 @@ public class gui2_test {
         MEMPanel.add(MEMChartPanel, CPUChart);
 
         JLabel MEM_right_info_text = new JLabel("<html>" +
-                "<font size=>" + SamMclCPU.cpuName() + "</font><br><br>" +
+                "<font size=+2> Memory Info </font><br><br>" +
                 "<table cellpadding='5' align='center'>"+
-                "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + SamMclCPU.socketCount() +" </td></tr>"+
-                "<tr><td><font size=-1> Cores: </font></td><td align='center'>" + SamMclCPU.coreCount() + " </td></tr>" +
-                "<tr><td><font size=-1> Logical Processors: </font></td><td align='center'>" + SamMclCPU.logicalCoreCount() + " </td></tr>" +
-                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed()+ " <font size=-2> GHz </font></td></tr>" +
-                "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1d()) +  " <font size=-2> KB </font></td></tr>" +
-                "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1i()) + " <font size=-2> KB </font></td></tr>" +
-                "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1()) + " <font size=-2> KB </font></td></tr>" +
-                "<tr><td><font size=-1> L2 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel2()) + " <font size=-2> MB </font></td></tr>" +
-                "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel3()) + " <font size=-2> MB </font></td></tr>" +
+                "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + memory.getTotalMemory() +"<font size=-2> GB </font> </td></tr>"+
+                "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + memory.getUsedMemory() + "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + memory.getFreeMemory()+ "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + memory.getMemoryAsAPercentage() +"<font size=-2> % </font> </td></tr>" +
                 "</table></html>");
 
         MEMPanel.add(MEM_right_info_text, CPURightInfo);
@@ -407,6 +403,15 @@ public class gui2_test {
                 CPU4.add(time, SamMclCPU.averageSystemTimes());
                 //System.out.println(memory.getTotalMemory());
                 MEMSeries.add(time, memory.getMemoryAsAPercentage());
+
+                MEM_right_info_text.setText("<html>" +
+                        "<font size=+2> Memory Info </font><br><br>" +
+                        "<table cellpadding='5' align='center'>"+
+                        "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + memory.getTotalMemory() +"<font size=-2> GB </font> </td></tr>"+
+                        "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + memory.getUsedMemory() + "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + memory.getFreeMemory()+ "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + memory.getMemoryAsAPercentage() +"<font size=-2> % </font> </td></tr>" +
+                        "</table></html>");
                 time++;
 
                 // Check if the series has more than 60 entries, remove the oldest if true

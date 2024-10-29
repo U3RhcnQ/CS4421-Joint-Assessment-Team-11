@@ -15,22 +15,22 @@ public class memory {
     // Methods to call if needed
     public int getTotalMemory() {
         readMemory();
-        return memory.getTotal();
+        return memory.getTotal()/ 1048576;
     }
 
     public int getUsedMemory() {
         readMemory();
-        return memory.getUsed();
+        return memory.getUsed()/ 1048576;
     }
 
     public int getFreeMemory() {
         readMemory();
-        return getTotalMemory() - getUsedMemory();
+        return (getTotalMemory() - getUsedMemory());
     }
 
-    public int getMemoryAsAPercentage() {
+    public double getMemoryAsAPercentage() {
         readMemory();
-        return (int) ((getUsedMemory() / (double) getTotalMemory()) * 100);
+        return (double) ((getUsedMemory() / (double) getTotalMemory()) * 100);
         
 
     }

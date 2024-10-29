@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class SamMclCPU {
     public static void main(String[] args) {
         modelEtc();
-        cacheSizes();
         idleTimes();
         averageIdleTimes();
         averageSystemTimes();
@@ -41,18 +40,6 @@ public class SamMclCPU {
         }
     }
 
-    // Overall cache Size Call
-    public static void cacheSizes() {
-        System.loadLibrary("sysInfo");
-        cpuInfo cpu = new cpuInfo();
-        cpu.read(0);
-
-        // Show sizes of L1,L2 and L3 cache
-        System.out.println("l1d=" + (cpu.l1dCacheSize() * 0.001) +
-                ", l1i=" + (cpu.l1iCacheSize() * 0.001) +
-                ", l2=" + (cpu.l2CacheSize() * 0.000001) +
-                ", l3=" + (cpu.l3CacheSize() * 0.000001));
-    }
 
     // Individual Calls for formatting reasons
     public static double cacheSizel1d() {
@@ -172,25 +159,22 @@ public class SamMclCPU {
         return systemTimeAverage;
     }
 
-    public static double utilisationTime() {
+    public static ArrayList<Integer> utilisationTime() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
 
         // Utilisation Average
         ArrayList<Integer> utilisationAverage = new ArrayList<>();
-        double sum3 = 0;
 
         for (int j = 0; j < cpu.coresPerSocket(); j++) {
-            double utilisationPercentage = ((double) (cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)));
+            double utilisationPercentage = ((double) ((cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j))*100));
             System.out.println("Untilisation percentage for core " + j + " is " + utilisationPercentage + "%");
 
             utilisationAverage.add(cpu.getIdleTime(j));
-            sum3 += utilisationPercentage;
 
         }
-        //System.out.println(utilisationAverage);
 
-        return sum3;
+        return utilisationAverage;
     }
 }

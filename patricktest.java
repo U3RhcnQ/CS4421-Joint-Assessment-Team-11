@@ -141,7 +141,8 @@ public class patricktest {
         vendorMap.put("0x1B1C", "Corsair Memory, Inc.");
         vendorMap.put("0x0002", "Freescale Semiconductor, Inc.");
         vendorMap.put("0x0001", "Mercury Computer Systems");
-        vendorMap.put("0x0021", "xyz");
+        vendorMap.put("0x0781", "SanDisk Corporation, Inc.");
+        vendorMap.put("0x80EE", "Samsung Electronics");
 
         // Product ID's
 

@@ -2,18 +2,22 @@ import java.util.ArrayList;
 
 public class SamMclCPU {
     public static void main(String[] args) {
-        modelEtc();
         idleTimes();
         averageIdleTimes();
         averageSystemTimes();
         averageUserTimes();
         utilisationTime();
+        cpuName();
+        socketCount();
+        coreCount();
+        logicalCoreCount();
+        baseSpeed();
     }
 
 
     // TO DO I need you to give me a call to get cores, logical cores and cpu information one by one like i did with the cache
     // Very Important do not use print statements and make sure return is not void I can't use it otherwise at all
-
+    /*
     public static void modelEtc() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
@@ -40,6 +44,65 @@ public class SamMclCPU {
         }
     }
 
+     */
+
+    public static String cpuName() {
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return cpu.getModel();
+    }
+
+    public static int socketCount() {
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return cpu.socketCount();
+    }
+
+    public static int coreCount() {
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        return cpu.coresPerSocket();
+    }
+
+    public static int logicalCoreCount() {
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+
+        String model = cpu.getModel();
+
+        if (model.length() == 39) {
+            String subModel = model.substring(31, 34);
+            String baseSpeed = model.substring(31, 38);
+            Integer subNum = Integer.valueOf(subModel);
+            if (subNum >= 13) {
+                return cpu.coresPerSocket();
+            }
+        }
+        else {
+            return (cpu.coresPerSocket() * 2);
+        }
+        return 0;
+    }
+
+    public static String baseSpeed() {
+        System.loadLibrary("sysInfo");
+        cpuInfo cpu = new cpuInfo();
+        cpu.read(0);
+        String model = cpu.getModel();
+
+        if (model.length() == 39) {
+            String baseSpeed = model.substring(31, 38);
+            return baseSpeed;
+        }
+        else{
+            String baseSpeed1 = model.substring(30, 37);
+            return baseSpeed1;
+        }
+    }
 
     // Individual Calls for formatting reasons
     public static double cacheSizel1d() {
@@ -159,22 +222,22 @@ public class SamMclCPU {
         return systemTimeAverage;
     }
 
-    public static ArrayList<Integer> utilisationTime() {
+    public static double utilisationTime() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
 
         // Utilisation Average
-        ArrayList<Integer> utilisationAverage = new ArrayList<>();
+
+        double utilisationAverage = 0;
 
         for (int j = 0; j < cpu.coresPerSocket(); j++) {
             double utilisationPercentage = ((double) ((cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j))*100));
-            System.out.println("Untilisation percentage for core " + j + " is " + utilisationPercentage + "%");
-
-            utilisationAverage.add(cpu.getIdleTime(j));
+            System.out.println("Utilisation percentage for core " + j + " is " + utilisationPercentage + "%");
+            utilisationAverage += utilisationPercentage;
 
         }
+        return utilisationAverage/cpu.coresPerSocket();
 
-        return utilisationAverage;
     }
 }

@@ -57,8 +57,6 @@ public class PciTJ {
         vendorMap.put("0x0001", "unassigned vendor");
         vendorMap.put("0x0000 ", "unassigned vendor");
         vendorMap.put("0x15AD", "VMware");
-
-
     }
 
     private void loadProductMap() {
@@ -98,11 +96,6 @@ public class PciTJ {
         productMap.put("0x0000", "Virtual Box PlaceHolder");
         productMap.put("0x0001", "Virtual Box PlaceHolder");
         productMap.put("0x8086", "Intel");
-
-
-
-
-
     }
 
     public String[][] getPCIInfo() {

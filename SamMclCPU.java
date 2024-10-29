@@ -95,11 +95,11 @@ public class SamMclCPU {
         String model = cpu.getModel();
 
         if (model.length() == 39) {
-            String baseSpeed = model.substring(31, 38);
+            String baseSpeed = model.substring(33, 40);
             return baseSpeed;
         }
         else{
-            String baseSpeed1 = model.substring(30, 37);
+            String baseSpeed1 = model.substring(32, 39);
             return baseSpeed1;
         }
     }

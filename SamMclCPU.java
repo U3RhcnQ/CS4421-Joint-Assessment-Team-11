@@ -74,9 +74,8 @@ public class SamMclCPU {
 
         String model = cpu.getModel();
 
-        if (model.length() == 39) {
-            String subModel = model.substring(31, 34);
-            String baseSpeed = model.substring(31, 38);
+        if (model.length() == 42) {
+            String subModel = model.substring(33, 37);
             Integer subNum = Integer.valueOf(subModel);
             if (subNum >= 13) {
                 return cpu.coresPerSocket();

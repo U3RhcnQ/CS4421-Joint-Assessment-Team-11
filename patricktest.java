@@ -182,7 +182,7 @@ public class patricktest {
         productMap.put("0xFFFF", "Gaming Controller Adapter");
         productMap.put("0x0002", " Z-Wave Wave 1 device");
         productMap.put("0x0001", "Virtual Box Placeholder");
-        productMap.put("0x0021", "G502 X PLUS");
+        productMap.put("0x0021", "Host Controller");
         productMap.put("0x0002", "Virtual Box Placeholder");
         productMap.put("0x557D", "Sandisk USB Components");
 

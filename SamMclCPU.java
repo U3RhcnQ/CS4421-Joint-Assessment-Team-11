@@ -225,19 +225,20 @@ public class SamMclCPU {
     public static double utilisationTime() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(0);
+        cpu.read(1);
 
         // Utilisation Average
 
         double utilisationAverage = 0;
 
         for (int j = 0; j < cpu.coresPerSocket(); j++) {
-            double utilisationPercentage = ((double) ((cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j))*100));
+            double utilisationPercentage = 100 - cpu.getIdleTime(j);
+            //double utilisationPercentage = ((double) ((cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)))*100);
             System.out.println("Utilisation percentage for core " + j + " is " + utilisationPercentage + "%");
             utilisationAverage += utilisationPercentage;
 
         }
-        return utilisationAverage/cpu.coresPerSocket();
+        return (double) utilisationAverage/cpu.coresPerSocket();
 
     }
 }

@@ -115,7 +115,7 @@ public class SamMclCPU {
 
         // Sleep for 1 second and display the idle time percentage for
         // core 1.  This assumes 10Hz so in one second we have 100
-        cpu.read(1);
+        //cpu.read(1);
 
         // Idle times for all cores
         for (int i = 0; i < cpu.coresPerSocket(); i++) { // Loops through cores to get the different information from each
@@ -127,7 +127,7 @@ public class SamMclCPU {
     public static double averageIdleTimes() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        //cpu.read(1);
 
         //Average idle time
         ArrayList<Integer> idleTimeArray = new ArrayList<>(); // adds all the idle times to a single array
@@ -148,7 +148,7 @@ public class SamMclCPU {
     public static double averageUserTimes() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        //cpu.read(1);
 
         // Average user time
         ArrayList<Integer> userTimeArray = new ArrayList<>(); // Same as idle times above
@@ -170,7 +170,7 @@ public class SamMclCPU {
     public static double averageSystemTimes() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        //cpu.read(1);
 
         // Average system time
         ArrayList<Integer> systemTimeArray = new ArrayList<>(); // Same as two above
@@ -200,7 +200,7 @@ public class SamMclCPU {
         for (int j = 0; j < cpu.coresPerSocket(); j++) {
             //double utilisationPercentage = 100 - cpu.getIdleTime(j);
             double utilisationPercentage = ((double) (cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)) * 100);
-            System.out.println("Utilisation percentage for core " + j + " is " + utilisationPercentage + "%");
+            //System.out.println("Utilisation percentage for core " + j + " is " + utilisationPercentage + "%");
             utilisationAverage += utilisationPercentage; //adds all the utilisation percentages together for the average
 
         }

@@ -47,12 +47,12 @@ public class SamDiskInfo {
     public static String[][] diskTable(){
         diskInfo disk = new diskInfo();
         disk.read();
-        String[][] diskInfoArray = new String[4][disk.diskCount()];
+        String[][] diskInfoArray = new String[4][disk.diskCount()]; // Creates the 2d list
         for (int i = 0; i < disk.diskCount(); i++) {
-            diskInfoArray[0][i] = disk.getName(i);
-            diskInfoArray[1][i] = String.valueOf(disk.getTotal(i));
-            diskInfoArray[2][i] = String.valueOf(disk.getUsed(i));
-            diskInfoArray[3][i] = String.valueOf(((double)(disk.getUsed(i) / disk.getTotal(i)))*100);
+            diskInfoArray[0][i] = disk.getName(i); // Adds the disk names to the first row
+            diskInfoArray[1][i] = String.valueOf(disk.getTotal(i)); // Adds the total for each disk to the second row
+            diskInfoArray[2][i] = String.valueOf(disk.getUsed(i)); // Adds the used storage to the third row
+            diskInfoArray[3][i] = String.valueOf(((double)(disk.getUsed(i) / disk.getTotal(i)))*100); // Adds the percent used to the fourth row
         }
         return diskInfoArray;
     }

@@ -17,28 +17,28 @@ public class SamMclCPU {
     public static String cpuName() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return cpu.getModel();
     }
 
     public static int socketCount() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return cpu.socketCount();
     }
 
     public static int coreCount() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return cpu.coresPerSocket();
     }
 
     public static int logicalCoreCount() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
 
         String model = cpu.getModel();
 
@@ -58,7 +58,7 @@ public class SamMclCPU {
     public static String baseSpeed() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         String model = cpu.getModel(); // getting the model as it tells us the base speed at the end of the string
 
         // if statement used here as if the handles are above 10,000 then it will have 1 more index and therefore the base speed will be at a different index
@@ -76,35 +76,35 @@ public class SamMclCPU {
     public static double cacheSizel1d() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return (double) cpu.l1dCacheSize() * 0.001; // times by 0.001 for kilobytes
     }
 
     public static double cacheSizel1i() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return (double) cpu.l1iCacheSize() * 0.001; // times by 0.001 for kilobytes
     }
 
     public static double cacheSizel1() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return (double) cpu.l1iCacheSize() * 0.001 + cpu.l1dCacheSize() * 0.001; // To get total L1 cache we add both
     }
 
     public static double cacheSizel2() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return (double) cpu.l2CacheSize() * 0.000001; // times by 0.000001 for kilobytes
     }
 
     public static double cacheSizel3() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        cpu.read(0);
         return (double) cpu.l3CacheSize() * 0.000001; // times by 0.000001 for kilobytes
     }
 
@@ -115,7 +115,7 @@ public class SamMclCPU {
 
         // Sleep for 1 second and display the idle time percentage for
         // core 1.  This assumes 10Hz so in one second we have 100
-        cpu.read(1);
+        //cpu.read(1);
 
         // Idle times for all cores
         for (int i = 0; i < cpu.coresPerSocket(); i++) { // Loops through cores to get the different information from each
@@ -127,7 +127,7 @@ public class SamMclCPU {
     public static double averageIdleTimes() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        //cpu.read(1);
 
         //Average idle time
         ArrayList<Integer> idleTimeArray = new ArrayList<>(); // adds all the idle times to a single array
@@ -148,7 +148,7 @@ public class SamMclCPU {
     public static double averageUserTimes() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        //cpu.read(1);
 
         // Average user time
         ArrayList<Integer> userTimeArray = new ArrayList<>(); // Same as idle times above
@@ -170,7 +170,7 @@ public class SamMclCPU {
     public static double averageSystemTimes() {
         System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
-        cpu.read(1);
+        //cpu.read(1);
 
         // Average system time
         ArrayList<Integer> systemTimeArray = new ArrayList<>(); // Same as two above
@@ -198,9 +198,9 @@ public class SamMclCPU {
         double utilisationAverage = 0;
 
         for (int j = 0; j < cpu.coresPerSocket(); j++) {
-            double utilisationPercentage = 100 - cpu.getIdleTime(j);
-            //double utilisationPercentage = ((double) ((cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)))*100);
-            System.out.println("Utilisation percentage for core " + j + " is " + utilisationPercentage + "%");
+            //double utilisationPercentage = 100 - cpu.getIdleTime(j);
+            double utilisationPercentage = ((double) (cpu.getUserTime(j) + cpu.getSystemTime(j)) / (cpu.getUserTime(j) + cpu.getSystemTime(j) + cpu.getIdleTime(j)) * 100);
+            //System.out.println("Utilisation percentage for core " + j + " is " + utilisationPercentage + "%");
             utilisationAverage += utilisationPercentage; //adds all the utilisation percentages together for the average
 
         }

@@ -145,10 +145,18 @@ public class gui2_test {
         // Chart Code
         XYSeries series;
         // Create a series to hold the data
-        series = new XYSeries("");
+        XYSeries CPU1 = new XYSeries("CPU1");
+        XYSeries CPU2 = new XYSeries("CPU2");
+        XYSeries CPU3 = new XYSeries("CPU3");
+        XYSeries CPU4 = new XYSeries("CPU4");
+
         // Create a dataset and add the series to it
         XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series);
+        dataset.addSeries(CPU1);
+        dataset.addSeries(CPU2);
+        dataset.addSeries(CPU3);
+        dataset.addSeries(CPU4);
+
 
         // Create the chart using JFreeChart
         JFreeChart chart = ChartFactory.createXYLineChart(
@@ -215,7 +223,7 @@ public class gui2_test {
                 "",          // Y-Axis Label
                 MEMDataset,          // Dataset for the chart
                 PlotOrientation.VERTICAL,
-                true, true, false
+                false, true, false
         );
 
         // Get the plot from the chart and set the range for the y-axis
@@ -393,14 +401,20 @@ public class gui2_test {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Add Data
-                series.add(time, SamMclCPU.utilisationTime());
+                CPU1.add(time, SamMclCPU.utilisationTime());
+                CPU2.add(time, SamMclCPU.averageIdleTimes());
+                CPU3.add(time, SamMclCPU.averageUserTimes());
+                CPU4.add(time, SamMclCPU.averageSystemTimes());
                 System.out.println(memory.getTotalMemory());
                 MEMSeries.add(time, memory.getMemoryAsAPercentage());
                 time++;
 
                 // Check if the series has more than 60 entries, remove the oldest if true
-                if (series.getItemCount() > 60) {
-                    series.remove(0); // Remove the first (oldest) entry
+                if (CPU1.getItemCount() > 60) {
+                    CPU1.remove(0); // Remove the first (oldest) entry
+                    CPU2.remove(0); // Remove the first (oldest) entry
+                    CPU3.remove(0); // Remove the first (oldest) entry
+                    CPU4.remove(0); // Remove the first (oldest) entry
                 }
                 // Check if the series has more than 60 entries, remove the oldest if true
                 if (MEMSeries.getItemCount() > 60) {

@@ -145,10 +145,10 @@ public class gui2_test {
         // Chart Code
         XYSeries series;
         // Create a series to hold the data
-        XYSeries CPU1 = new XYSeries("CPU1");
-        XYSeries CPU2 = new XYSeries("CPU2");
-        XYSeries CPU3 = new XYSeries("CPU3");
-        XYSeries CPU4 = new XYSeries("CPU4");
+        XYSeries CPU1 = new XYSeries("Utilisation");
+        XYSeries CPU2 = new XYSeries("IdleTimes");
+        XYSeries CPU3 = new XYSeries("UserTimes");
+        XYSeries CPU4 = new XYSeries("SystemTimes");
 
         // Create a dataset and add the series to it
         XYSeriesCollection dataset = new XYSeriesCollection();
@@ -373,7 +373,7 @@ public class gui2_test {
         DefaultTableModel finalPCITableModel = PCITableModel;
         PCIRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.print(Arrays.deepToString(pci.getPCIInfo()));
+                //System.out.print(Arrays.deepToString(pci.getPCIInfo()));
                 refreshTable(finalPCITableModel, pci.getPCIInfo()); // Pass the table model to the refresh method
             }
         });
@@ -405,7 +405,7 @@ public class gui2_test {
                 CPU2.add(time, SamMclCPU.averageIdleTimes());
                 CPU3.add(time, SamMclCPU.averageUserTimes());
                 CPU4.add(time, SamMclCPU.averageSystemTimes());
-                System.out.println(memory.getTotalMemory());
+                //System.out.println(memory.getTotalMemory());
                 MEMSeries.add(time, memory.getMemoryAsAPercentage());
                 time++;
 

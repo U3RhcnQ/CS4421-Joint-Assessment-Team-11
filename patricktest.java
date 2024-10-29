@@ -7,15 +7,20 @@ public class patricktest {
     private static HashMap<String, String> vendorMap = new HashMap<>();
     private static HashMap<String, String> productMap = new HashMap<>();
 
+
+
     public patricktest() {
+
+    //new usbInfo() creates a new instance of the usbInfo class
         this.usb = new usbInfo();
         initializeMaps();
     }
 
-    // Core methods that directly wrap the native methods
+    // Reads data on USB so the following methods can have data
     public void readUSB() {
         usb.read();
     }
+
     // Bus Count
     public int getBusCount() {
         return usb.busCount();
@@ -35,8 +40,9 @@ public class patricktest {
 
     // Get vendor name from ID
     public String getVendorName(int vendorId) {
+        // Convert vendorId from a int to hexadecimal
         String hexVendorId = String.format("0x%04X", vendorId);
-
+        // if vendor map contains the hex return the corresponding vendor name else "Unknown company"
         if (vendorMap.containsKey(hexVendorId)) {
             return vendorMap.get(hexVendorId);
         } else {
@@ -45,8 +51,11 @@ public class patricktest {
     }
     // Get product description from ID
     public String getProductDescription(int productId) {
+
+        // Convert productrId from a int to hexadecimal
         String hexProductId = String.format("0x%04X", productId);
 
+        // if product map contains the hex return the corresponding product name else "Unknown company"
         if (productMap.containsKey(hexProductId)) {
             return productMap.get(hexProductId);
         } else {
@@ -61,6 +70,8 @@ public class patricktest {
         // Calculate total number of devices
         int totalDevices = 0;
         for (int i = 1; i <= getBusCount(); i++) {
+
+            // Adds the device count for the current bus to totalDevices, accumulating the count across all buses.
             totalDevices += getDeviceCount(i);
         }
 
@@ -81,7 +92,7 @@ public class patricktest {
                         String.format("0x%04X", productId),          // Product ID in hex
                         getProductDescription(productId)             // Product description
                 };
-
+                // After adding the current device’s information to usbArray, rowIndex is incremented to move to the next row for the next device.
                 rowIndex++;
             }
         }
@@ -90,7 +101,7 @@ public class patricktest {
 
     private void initializeMaps() {
 
-        // Vendor ID's
+        // Vendor ID's HashMap
 
         vendorMap.put("0x8086", "Intel Corporation");
         vendorMap.put("0x10DE", "NVIDIA Corporation");
@@ -144,7 +155,7 @@ public class patricktest {
         vendorMap.put("0x0781", "SanDisk Corporation, Inc.");
         vendorMap.put("0x80EE", "Samsung Electronics");
 
-        // Product ID's
+        // Product ID's HashMap
 
         productMap.put("0x1234", "USB 3.0 Controller");
         productMap.put("0x5678", "Gaming Mouse");
@@ -180,7 +191,7 @@ public class patricktest {
         productMap.put("0xDDDD", "Motor Controller for Robotics");
         productMap.put("0xEEEE", "Camera Interface Module");
         productMap.put("0xFFFF", "Gaming Controller Adapter");
-        productMap.put("0x0002", " Z-Wave Wave 1 device");
+        productMap.put("0x0002", "Z-Wave Wave 1 device");
         productMap.put("0x0001", "Virtual Box Placeholder");
         productMap.put("0x0021", "Host Controller");
         productMap.put("0x0002", "Virtual Box Placeholder");

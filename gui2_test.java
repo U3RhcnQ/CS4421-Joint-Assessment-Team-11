@@ -373,7 +373,7 @@ public class gui2_test {
         DefaultTableModel finalPCITableModel = PCITableModel;
         PCIRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.print(Arrays.deepToString(pci.getPCIInfo()));
+                //System.out.print(Arrays.deepToString(pci.getPCIInfo()));
                 refreshTable(finalPCITableModel, pci.getPCIInfo()); // Pass the table model to the refresh method
             }
         });

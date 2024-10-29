@@ -25,6 +25,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -34,6 +35,10 @@ public class gui2_test {
     private static patricktest usb;
     private static PciTJ pci;
     private static SamMclCPU cpu;
+    private DefaultPieDataset dataset;
+    private JFreeChart chart;
+
+
 
     private static void createAndShowGUI() {
 
@@ -179,7 +184,7 @@ public class gui2_test {
             public void actionPerformed(ActionEvent e) {
 
                 // Add Data
-                //series.add(time, SamMclCPU.utilisationTime());
+                series.add(time, SamMclCPU.utilisationTime());
                 time++;
 
                 // Check if the series has more than 60 entries, remove the oldest if true
@@ -196,12 +201,30 @@ public class gui2_test {
 
 
         JPanel panel2 = new JPanel(false);
-        JLabel filler2 = new JLabel("Memory Info");
-        panel2.add(new JButton("FlatDarkLaf button!"));
-        panel2.add(new JTextField("FlatDarkLaf text field!"));
-        filler2.setHorizontalAlignment(JLabel.CENTER);
-        panel2.setLayout(new GridLayout(1, 1));
-        panel2.add(filler2);
+
+        // Sample dataset for CPU pie chart
+        DefaultPieDataset cpuDataset = new DefaultPieDataset();
+        cpuDataset.setValue("Core 1", 25);
+        cpuDataset.setValue("Core 2", 35);
+        cpuDataset.setValue("Core 3", 20);
+        cpuDataset.setValue("Core 4", 20);
+
+        // Create a pie chart for CPU data
+        PieChartPanel cpuPieChart = new PieChartPanel("CPU Utilization", cpuDataset);
+
+        // Another dataset and pie chart example for a different component
+        DefaultPieDataset memoryDataset = new DefaultPieDataset();
+        memoryDataset.setValue("Used", 70);
+        memoryDataset.setValue("Free", 30);
+        PieChartPanel memoryPieChart = new PieChartPanel("Memory Utilization", memoryDataset);
+
+        // Example layout for pie charts
+        JPanel chartPanel2 = new JPanel(new GridLayout(1, 2));
+        chartPanel2.add(cpuPieChart);
+        chartPanel2.add(memoryPieChart);
+
+        panel2.add(chartPanel2);
+
         tabbedPane.addTab("Memory Info", null, panel2,"Memory Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
@@ -360,6 +383,8 @@ public class gui2_test {
             table.addRow(row); // Add each row to the table model
         }
     }
+
+
 
     public static void main(final String[] args) {
 

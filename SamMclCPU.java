@@ -119,8 +119,8 @@ public class SamMclCPU {
 
         // Idle times for all cores
         for (int i = 0; i < cpu.coresPerSocket(); i++) { // Loops through cores to get the different information from each
-            System.out.println("core" + i + "idle=" + cpu.getIdleTime(i) + "%");
-            System.out.println("core" + i + "active=" + (100 - cpu.getIdleTime(i) + "%"));
+            //System.out.println("core" + i + "idle=" + cpu.getIdleTime(i) + "%");
+            //System.out.println("core" + i + "active=" + (100 - cpu.getIdleTime(i) + "%"));
         }
     }
 
@@ -133,7 +133,7 @@ public class SamMclCPU {
         ArrayList<Integer> idleTimeArray = new ArrayList<>(); // adds all the idle times to a single array
         for (int i = 0; i < cpu.coresPerSocket(); i++) {
             idleTimeArray.add(cpu.getIdleTime(i));
-            System.out.println(cpu.getIdleTime(i));
+            //System.out.println(cpu.getIdleTime(i));
         }
         double sum = 0;
         for (int a = 0; a < cpu.coresPerSocket(); a++) {
@@ -154,7 +154,7 @@ public class SamMclCPU {
         ArrayList<Integer> userTimeArray = new ArrayList<>(); // Same as idle times above
         for (int i = 0; i < cpu.coresPerSocket(); i++) {
             userTimeArray.add(cpu.getUserTime(i));
-            System.out.println(cpu.getUserTime(i));
+            //System.out.println(cpu.getUserTime(i));
         }
 
         double sum1 = 0;
@@ -176,7 +176,7 @@ public class SamMclCPU {
         ArrayList<Integer> systemTimeArray = new ArrayList<>(); // Same as two above
         for (int i = 0; i < cpu.coresPerSocket(); i++) {
             systemTimeArray.add(cpu.getSystemTime(i));
-            System.out.println(cpu.getSystemTime(i));
+            //System.out.println(cpu.getSystemTime(i));
         }
 
         double sum2 = 0;

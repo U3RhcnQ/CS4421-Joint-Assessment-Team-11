@@ -439,7 +439,7 @@ public class gui2_test {
     }
 
     public static void main(final String[] args) {
-
+        // Startup
         SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
         System.loadLibrary("sysinfo");
         sysInfo info = new sysInfo();

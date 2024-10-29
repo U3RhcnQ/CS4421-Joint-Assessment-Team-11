@@ -3,6 +3,7 @@
 import java.util.HashMap;
 
 public class patricktest {
+    // private so it is encapsulated within the class
     private usbInfo usb;
     private static HashMap<String, String> vendorMap = new HashMap<>();
     private static HashMap<String, String> productMap = new HashMap<>();

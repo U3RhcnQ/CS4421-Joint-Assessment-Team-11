@@ -54,6 +54,6 @@ public class SamDiskInfo {
             diskInfoArray[2][i] = String.valueOf(disk.getUsed(i)); // Adds the used storage to the third row
             diskInfoArray[3][i] = String.valueOf(((double)(disk.getUsed(i) / disk.getTotal(i)))*100); // Adds the percent used to the fourth row
         }
-        return diskInfoArray;
+        return diskInfoArray; 
     }
 }

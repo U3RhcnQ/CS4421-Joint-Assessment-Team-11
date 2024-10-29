@@ -4,15 +4,15 @@ public class memory {
 
     private memInfo memory;
 
+    // Initialises the memory instance variable. This allows the memory class to use memInfo
     public memory() {
         memory = new memInfo();
-
     }
-
     public void readMemory() {
         memory.read();
     }
 
+    // Methods to call if needed
     public int getTotalMemory() {
         readMemory();
         return memory.getTotal();
@@ -31,26 +31,24 @@ public class memory {
     public int getMemoryAsAPercentage() {
         readMemory();
         return (int) ((getUsedMemory() / (double) getTotalMemory()) * 100);
+        
+
     }
 
 
     // 2d array
     public String[][] getMemoryInfoAs2DArray() {
 
+
         readMemory();
-        String[][] memoryInfo = new String[3][2];
+        // this creates a 4x1 array that holds a string value
+        String[][] memoryInfo = new String[4][1];
 
-        memoryInfo[0][0] = "Total Memory";
-        memoryInfo[0][1] = String.valueOf(getTotalMemory());
-
-        memoryInfo[1][0] = "Used Memory";
-        memoryInfo[1][1] = String.valueOf(getUsedMemory());
-
-        memoryInfo[2][0] = "Free Memory";
-        memoryInfo[2][1] = String.valueOf(getFreeMemory());
-
-        memoryInfo[3][0] = "Memory Used As A Percentage";
-        memoryInfo[3][1] = String.valueOf(getMemoryAsAPercentage());
+        // Gives the array data
+        memoryInfo[0][0] = String.valueOf(getTotalMemory());
+        memoryInfo[1][0] = String.valueOf(getUsedMemory());
+        memoryInfo[2][0] = String.valueOf(getFreeMemory());
+        memoryInfo[3][0] = String.valueOf(getMemoryAsAPercentage());
 
         return memoryInfo;
     }

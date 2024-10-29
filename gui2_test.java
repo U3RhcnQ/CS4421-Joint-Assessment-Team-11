@@ -1,4 +1,5 @@
 // Flatlaf LAF
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.imageio.ImageIO;
 // Swing Libraries
@@ -35,14 +36,14 @@ public class gui2_test {
     private static patricktest usb;
     private static PciTJ pci;
     private static SamMclCPU cpu;
-    private DefaultPieDataset dataset;
+    private DefaultPieDataset<String> dataset;
     private JFreeChart chart;
 
 
 
     private static void createAndShowGUI() {
 
-        FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
+        FlatDarkLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
         final JFrame frame = new JFrame("TaskSys"); // Title
         DefaultTableModel USBTableModel = null; // Declare the table model
         DefaultTableModel PCITableModel; // Declare the table model
@@ -175,7 +176,7 @@ public class gui2_test {
         CPUpanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
         // Timer to update the chart every second
-        Timer timer = new Timer(10, new ActionListener() {
+        Timer timer = new Timer(100, new ActionListener() {
             int time = 0;
             int counter;
             int sum;
@@ -240,7 +241,7 @@ public class gui2_test {
         USBPanel.add(USBRefresh, RefreshButtonConstraints);
 
         // Column Names
-        String[] USBColumnNames = { "Bus", "Device", "FFunction", "Vendor ID", "Vendor", "Device ID", "Device" };
+        String[] USBColumnNames = { "Bus", "Device", "Vendor ID", "Vendor", "Device ID", "Device" };
 
         // Initializing the JTable
         USBTableModel = new DefaultTableModel(USBColumnNames, 0); // Initialize the table model

@@ -28,9 +28,9 @@ public class memory {
         return (getTotalMemory() - getUsedMemory());
     }
 
-    public int getMemoryAsAPercentage() {
+    public double getMemoryAsAPercentage() {
         readMemory();
-        return (int) ((getUsedMemory() / (double) getTotalMemory()) * 100);
+        return (double) ((getUsedMemory() / (double) getTotalMemory()) * 100);
         
 
     }

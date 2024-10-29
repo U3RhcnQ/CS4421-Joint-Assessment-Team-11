@@ -35,6 +35,7 @@ public class gui2_test {
 
     private static patricktest usb;
     private static PciTJ pci;
+    private static memory memory;
     private static SamMclCPU cpu;
     private DefaultPieDataset<String> dataset;
     private JFreeChart chart;
@@ -43,7 +44,7 @@ public class gui2_test {
 
     private static void createAndShowGUI() {
 
-        FlatDarkLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
+        FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
         final JFrame frame = new JFrame("TaskSys"); // Title
         DefaultTableModel USBTableModel = null; // Declare the table model
         DefaultTableModel PCITableModel; // Declare the table model
@@ -54,7 +55,7 @@ public class gui2_test {
         CPUChart.weighty = 0.6;
         CPUChart.fill = GridBagConstraints.BOTH;
         CPUChart.gridx = 0;
-        CPUChart.gridy = 0;
+        CPUChart.gridy = 1;
         CPUChart.insets = new Insets(10, 10, 10, 10);
 
         GridBagConstraints CPURightInfo = new GridBagConstraints();
@@ -62,14 +63,14 @@ public class gui2_test {
         CPURightInfo.weighty = 0.6;
         CPURightInfo.fill = GridBagConstraints.NONE;
         CPURightInfo.gridx = 1;
-        CPURightInfo.gridy = 0;
+        CPURightInfo.gridy = 1;
 
         GridBagConstraints CPUBottomInfo = new GridBagConstraints();
         CPUBottomInfo.weightx = 1.0;
         CPUBottomInfo.weighty = 0.4;
         CPUBottomInfo.fill = GridBagConstraints.BOTH;
         CPUBottomInfo.gridx = 0;
-        CPUBottomInfo.gridy = 1;
+        CPUBottomInfo.gridy = 2;
 
         GridBagConstraints TitleConstraints = new GridBagConstraints();
         TitleConstraints.gridx = 0;
@@ -112,6 +113,15 @@ public class gui2_test {
         TextAreaConstraints.anchor = GridBagConstraints.EAST;  // Align to right
         //TextAreaConstraints.insets = new Insets(0, 10, 0, 0);
 
+        GridBagConstraints MEMChartPanelConstraints = new GridBagConstraints();
+        MEMChartPanelConstraints.weightx = 0.7;
+        MEMChartPanelConstraints.weighty = 0.6;
+        MEMChartPanelConstraints.fill = GridBagConstraints.BOTH;
+        MEMChartPanelConstraints.gridx = 0;
+        MEMChartPanelConstraints.gridy = 1;
+        MEMChartPanelConstraints.insets = new Insets(10, 10, 10, 10);
+
+
         // Attempt to load the image and handle exception if not available
         try {
             // Load the logo image
@@ -127,8 +137,10 @@ public class gui2_test {
         // Add the First Panel
         JPanel CPUPanelWrapper = new JPanel(new BorderLayout());
         CPUPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        JPanel CPUpanel = new JPanel();
-        CPUpanel.setLayout(new GridBagLayout());
+        JPanel CPUPanel = new JPanel(new GridBagLayout());
+        JLabel CPUTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>CPU Info</span> " +
+                "<span style='font-size:11px;'> - Data will automatically refresh </span></html>");
+        CPUPanel.add(CPUTitle, TitleConstraints);
 
         // Chart Code
         XYSeries series;
@@ -155,15 +167,15 @@ public class gui2_test {
         // Create a panel for the chart
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(200, 200));
-        CPUpanel.add(chartPanel, CPUChart);
+        CPUPanel.add(chartPanel, CPUChart);
 
         JLabel cpu_right_info_text = new JLabel("<html>" +
-                "<font size=-1>" + SamMclCPU.cpuName() + "</font><br><br>" +
+                "<font size=>" + SamMclCPU.cpuName() + "</font><br><br>" +
                 "<table cellpadding='5' align='center'>"+
                 "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + SamMclCPU.socketCount() +" </td></tr>"+
                 "<tr><td><font size=-1> Cores: </font></td><td align='center'>" + SamMclCPU.coreCount() + " </td></tr>" +
                 "<tr><td><font size=-1> Logical Processors: </font></td><td align='center'>" + SamMclCPU.logicalCoreCount() + " </td></tr>" +
-                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed()+ " </td></tr>" +
+                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed()+ " <font size=-2> GHz </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1d()) +  " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1i()) + " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1()) + " <font size=-2> KB </font></td></tr>" +
@@ -171,64 +183,68 @@ public class gui2_test {
                 "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel3()) + " <font size=-2> MB </font></td></tr>" +
                 "</table></html>");
 
-        CPUpanel.add(cpu_right_info_text, CPURightInfo);
-        CPUPanelWrapper.add(CPUpanel);
+        CPUPanel.add(cpu_right_info_text, CPURightInfo);
+        CPUPanelWrapper.add(CPUPanel);
         JLabel cpu_bottom_info_panel = new JLabel("CPU Info");
         cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
-        CPUpanel.add(cpu_bottom_info_panel, CPUBottomInfo);
-
-        // Timer to update the chart every second
-        Timer timer = new Timer(10, new ActionListener() {
-            int time = 0;
-            int counter;
-            int sum;
-            int cores;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                // Add Data
-                series.add(time, SamMclCPU.utilisationTime());
-                time++;
-
-                // Check if the series has more than 60 entries, remove the oldest if true
-                if (series.getItemCount() > 60) {
-                    series.remove(0); // Remove the first (oldest) entry
-                }
-            }
-        });
-        timer.start();
-
+        CPUPanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
         tabbedPane.addTab("CPU Info", null, CPUPanelWrapper,"CPU Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
 
-        JPanel panel2 = new JPanel(false);
+        JPanel MEMPanelWrapper = new JPanel(new BorderLayout());
+        MEMPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        JPanel MEMPanel = new JPanel(new GridBagLayout());
+        JLabel MEMTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>Memory Info</span> " +
+                "<span style='font-size:11px;'> - Data will automatically refresh </span></html>");
+        MEMPanel.add(MEMTitle, TitleConstraints);
 
-        // Sample dataset for CPU pie chart
-        DefaultPieDataset cpuDataset = new DefaultPieDataset();
-        cpuDataset.setValue("Core 1", 25);
-        cpuDataset.setValue("Core 2", 35);
-        cpuDataset.setValue("Core 3", 20);
-        cpuDataset.setValue("Core 4", 20);
+        // Chart Code
+        XYSeries MEMSeries;
+        // Create a series to hold the data
+        MEMSeries = new XYSeries("");
+        // Create a dataset and add the series to it
+        XYSeriesCollection MEMDataset = new XYSeriesCollection();
+        MEMDataset.addSeries(MEMSeries);
 
-        // Create a pie chart for CPU data
-        PieChartPanel cpuPieChart = new PieChartPanel("CPU Utilization", cpuDataset);
+        // Create the chart using JFreeChart
+        JFreeChart MEMChart = ChartFactory.createXYLineChart(
+                "", // Chart title
+                "",           // X-Axis Label
+                "",          // Y-Axis Label
+                MEMDataset,          // Dataset for the chart
+                PlotOrientation.VERTICAL,
+                true, true, false
+        );
 
-        // Another dataset and pie chart example for a different component
-        DefaultPieDataset memoryDataset = new DefaultPieDataset();
-        memoryDataset.setValue("Used", 70);
-        memoryDataset.setValue("Free", 30);
-        PieChartPanel memoryPieChart = new PieChartPanel("Memory Utilization", memoryDataset);
+        // Get the plot from the chart and set the range for the y-axis
+        XYPlot MEMPlot = MEMChart.getXYPlot();
+        MEMPlot.getRangeAxis().setRange(0, 100); // Set y-axis range from 0 to 400
 
-        // Example layout for pie charts
-        JPanel chartPanel2 = new JPanel(new GridLayout(1, 2));
-        chartPanel2.add(cpuPieChart);
-        chartPanel2.add(memoryPieChart);
+        // Create a panel for the chart
+        ChartPanel MEMChartPanel = new ChartPanel(MEMChart);
+        MEMChartPanel.setPreferredSize(new Dimension(200, 200));
+        MEMPanel.add(MEMChartPanel, CPUChart);
 
-        panel2.add(chartPanel2);
+        JLabel MEM_right_info_text = new JLabel("<html>" +
+                "<font size=>" + SamMclCPU.cpuName() + "</font><br><br>" +
+                "<table cellpadding='5' align='center'>"+
+                "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + SamMclCPU.socketCount() +" </td></tr>"+
+                "<tr><td><font size=-1> Cores: </font></td><td align='center'>" + SamMclCPU.coreCount() + " </td></tr>" +
+                "<tr><td><font size=-1> Logical Processors: </font></td><td align='center'>" + SamMclCPU.logicalCoreCount() + " </td></tr>" +
+                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed()+ " <font size=-2> GHz </font></td></tr>" +
+                "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1d()) +  " <font size=-2> KB </font></td></tr>" +
+                "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1i()) + " <font size=-2> KB </font></td></tr>" +
+                "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1()) + " <font size=-2> KB </font></td></tr>" +
+                "<tr><td><font size=-1> L2 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel2()) + " <font size=-2> MB </font></td></tr>" +
+                "<tr><td><font size=-1> L3 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel3()) + " <font size=-2> MB </font></td></tr>" +
+                "</table></html>");
 
-        tabbedPane.addTab("Memory Info", null, panel2,"Memory Info");
+        MEMPanel.add(MEM_right_info_text, CPURightInfo);
+
+        MEMPanelWrapper.add(MEMPanel);
+        tabbedPane.addTab("Memory Info", null, MEMPanelWrapper,"Memory Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
 
@@ -371,12 +387,33 @@ public class gui2_test {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+        // Timer to update the chart every second
+        Timer timer = new Timer(10, new ActionListener() {
+            int time = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add Data
+                series.add(time, SamMclCPU.utilisationTime());
+                System.out.println(memory.getTotalMemory());
+                MEMSeries.add(time, memory.getMemoryAsAPercentage());
+                time++;
+
+                // Check if the series has more than 60 entries, remove the oldest if true
+                if (series.getItemCount() > 60) {
+                    series.remove(0); // Remove the first (oldest) entry
+                }
+                // Check if the series has more than 60 entries, remove the oldest if true
+                if (MEMSeries.getItemCount() > 60) {
+                    MEMSeries.remove(0); // Remove the first (oldest) entry
+                }
+            }
+        });
+        timer.start();
+
     }
 
     private static void refreshTable(DefaultTableModel table, String[][] newData ) {
         // Get new data (2D array from another function)
-
-        // Replace with your function to get new data
 
         // Clear existing data
         table.setRowCount(0); // Clear existing rows
@@ -387,8 +424,6 @@ public class gui2_test {
         }
     }
 
-
-
     public static void main(final String[] args) {
 
         SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
@@ -396,6 +431,7 @@ public class gui2_test {
         sysInfo info = new sysInfo();
         usb = new patricktest();
         pci = new PciTJ();
+        memory = new memory();
         //cpu = new SamMclCPU();
 
     }

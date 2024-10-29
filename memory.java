@@ -14,24 +14,30 @@ public class memory {
     }
 
     public int getTotalMemory() {
+        readMemory();
         return memory.getTotal();
     }
 
     public int getUsedMemory() {
+        readMemory();
         return memory.getUsed();
     }
 
     public int getFreeMemory() {
+        readMemory();
         return getTotalMemory() - getUsedMemory();
     }
 
     public int getMemoryAsAPercentage() {
+        readMemory();
         return (int) ((getUsedMemory() / (double) getTotalMemory()) * 100);
     }
 
 
     // 2d array
     public String[][] getMemoryInfoAs2DArray() {
+
+        readMemory();
         String[][] memoryInfo = new String[3][2];
 
         memoryInfo[0][0] = "Total Memory";

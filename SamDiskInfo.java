@@ -3,11 +3,9 @@ import java.util.ArrayList;
 public class SamDiskInfo {
     public static void main(String[] args){
         System.loadLibrary("sysinfo");
-        percentUsed();
-        diskBlocks();
-        diskNames();
-        diskBlocksUsed();
+        diskTable();
     }
+    /*
     public static double[] percentUsed(){
         diskInfo disk = new diskInfo();
         disk.read();
@@ -27,7 +25,7 @@ public class SamDiskInfo {
         }
         return diskNamesArray;
     }
-    public static long[] diskBlocks() {
+    public static long[] diskTotal() {
         diskInfo disk = new diskInfo();
         disk.read();
         long[] diskBlocksArray = new long[disk.diskCount()];
@@ -36,7 +34,7 @@ public class SamDiskInfo {
         }
         return diskBlocksArray;
     }
-    public static long[] diskBlocksUsed() {
+    public static long[] diskUsed() {
         diskInfo disk = new diskInfo();
         disk.read();
         long[] diskBlocksUsedArray = new long[disk.diskCount()];
@@ -44,5 +42,18 @@ public class SamDiskInfo {
             diskBlocksUsedArray[i] = disk.getUsed(i);
         }
         return diskBlocksUsedArray;
+    }
+    */
+    public static String[][] diskTable(){
+        diskInfo disk = new diskInfo();
+        disk.read();
+        String[][] diskInfoArray = new String[4][disk.diskCount()];
+        for (int i = 0; i < disk.diskCount(); i++) {
+            diskInfoArray[0][i] = disk.getName(i);
+            diskInfoArray[1][i] = String.valueOf(disk.getTotal(i));
+            diskInfoArray[2][i] = String.valueOf(disk.getUsed(i));
+            diskInfoArray[3][i] = String.valueOf(((double)(disk.getUsed(i) / disk.getTotal(i)))*100);
+        }
+        return diskInfoArray;
     }
 }

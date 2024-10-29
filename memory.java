@@ -13,33 +13,28 @@ public class memory {
     }
 
     // Methods to call if needed
-    public int getTotalMemory() {
+    public double getTotalMemory() {
         readMemory();
-        return memory.getTotal()/ 1048576;
+        return (double) memory.getTotal()/ 1048576;
     }
 
-    public int getUsedMemory() {
+    public double getUsedMemory() {
         readMemory();
-        return memory.getUsed()/ 1048576;
+        return (double) memory.getUsed()/ 1048576;
     }
 
-    public int getFreeMemory() {
+    public double getFreeMemory() {
         readMemory();
-        return (getTotalMemory() - getUsedMemory());
+        return ( (double) getTotalMemory() - getUsedMemory());
     }
 
     public double getMemoryAsAPercentage() {
         readMemory();
         return (double) ((getUsedMemory() / (double) getTotalMemory()) * 100);
-        
-
     }
-
 
     // 2d array
     public String[][] getMemoryInfoAs2DArray() {
-
-
         readMemory();
         // this creates a 4x1 array that holds a string value
         String[][] memoryInfo = new String[4][1];

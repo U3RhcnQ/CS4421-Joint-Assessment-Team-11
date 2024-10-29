@@ -48,6 +48,7 @@ public class gui2_test {
         final JFrame frame = new JFrame("TaskSys"); // Title
         DefaultTableModel USBTableModel = null; // Declare the table model
         DefaultTableModel PCITableModel; // Declare the table model
+        DefaultTableModel DISKTableModel;
 
         // Layout
         GridBagConstraints CPUChart = new GridBagConstraints();
@@ -64,7 +65,7 @@ public class gui2_test {
         CPURightInfo.fill = GridBagConstraints.VERTICAL;
         CPURightInfo.gridx = 1;
         CPURightInfo.gridy = 1;
-        CPURightInfo.anchor = GridBagConstraints.WEST;
+        CPURightInfo.anchor = GridBagConstraints.NORTH;
 
         GridBagConstraints CPUBottomInfo = new GridBagConstraints();
         CPUBottomInfo.weightx = 1.0;
@@ -91,6 +92,14 @@ public class gui2_test {
         TableConstraints.weighty = 1;
         TableConstraints.fill = GridBagConstraints.BOTH;
         TableConstraints.anchor = GridBagConstraints.WEST;  // Align to left
+
+        GridBagConstraints DISKTableConstraints = new GridBagConstraints();
+        DISKTableConstraints.gridx = 1;
+        DISKTableConstraints.gridy = 1;
+        DISKTableConstraints.weightx = 0.3;
+        DISKTableConstraints.weighty = 1;
+        DISKTableConstraints.fill = GridBagConstraints.BOTH;
+        DISKTableConstraints.anchor = GridBagConstraints.NORTH;  // Align to left
 
         GridBagConstraints RefreshButtonConstraints = new GridBagConstraints();
         RefreshButtonConstraints.gridx = 0;
@@ -239,10 +248,10 @@ public class gui2_test {
         JLabel MEM_right_info_text = new JLabel("<html>" +
                 "<font size=+2> Memory Info </font><br><br>" +
                 "<table cellpadding='5' align='center'>"+
-                "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + memory.getTotalMemory() +"<font size=-2> GB </font> </td></tr>"+
-                "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + memory.getUsedMemory() + "<font size=-2> GB </font> </td></tr>" +
-                "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + memory.getFreeMemory()+ "<font size=-2> GB </font> </td></tr>" +
-                "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + memory.getMemoryAsAPercentage() +"<font size=-2> % </font> </td></tr>" +
+                "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getTotalMemory()) +"<font size=-2> GB </font> </td></tr>"+
+                "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory())+ "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f",memory.getMemoryAsAPercentage()) +"<font size=-2> % </font> </td></tr>" +
                 "</table></html>");
 
         MEMPanel.add(MEM_right_info_text, CPURightInfo);
@@ -250,6 +259,66 @@ public class gui2_test {
         MEMPanelWrapper.add(MEMPanel);
         tabbedPane.addTab("Memory Info", null, MEMPanelWrapper,"Memory Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
+
+        JPanel DISKPanelWrapper = new JPanel(new BorderLayout());
+        DISKPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        JPanel DISKPanel = new JPanel(new GridBagLayout());
+        JLabel DISKTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>DISK Info</span> " +
+                "<span style='font-size:11px;'> - Data will automatically refresh every 10 seconds or manually</span></html>");
+        DISKPanel.add(DISKTitle, TitleConstraints);
+
+        String[][] DiskInfo = SamDiskInfo.diskTable();
+        JPanel DISKChartPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // Dynamically create rows, with 2 columns
+
+        for (int i = 0; i < DiskInfo[0].length; i++) {  // Loop through each disk
+
+            // Create a dataset for the current disk
+            DefaultPieDataset<String> diskDataset = new DefaultPieDataset<>();
+
+            // Add data to the dataset for the current disk
+            String diskName = DiskInfo[0][i]; // Disk name
+            double usedSpace = Double.parseDouble(DiskInfo[2][i]); // Used space
+            double totalSpace = Double.parseDouble(DiskInfo[1][i]); // Total space
+            double freeSpace = totalSpace - usedSpace; // Calculate free space
+
+            // Populate the dataset with used and free space
+            diskDataset.setValue("Used " + String.format("%.2f",usedSpace) + " GB", usedSpace);
+            diskDataset.setValue("Free " + String.format("%.2f",freeSpace) + " GB", freeSpace);
+
+            // Create the pie chart for the current disk
+            JFreeChart pieChart = ChartFactory.createPieChart(
+                    "Disk Usage - " + diskName, // Chart title
+                    diskDataset,               // Dataset for the chart
+                    true,                       // Include legend
+                    true,
+                    false
+            );
+
+            // Wrap the pie chart in a ChartPanel
+            ChartPanel chartPanel2 = new ChartPanel(pieChart);
+
+            DISKChartPanel.add(chartPanel2);
+            // You can now use 'pieChart' to display or add it to your application
+            // Add code here to display or save the chart
+        }
+
+        DISKPanel.add(DISKChartPanel, MEMChartPanelConstraints);
+
+        // Column Names
+        String[] DISKColumnNames = { "Bus", "Device", "Vendor ID" };
+
+        // Initializing the JTable
+        DISKTableModel = new DefaultTableModel(DISKColumnNames, 0); // Initialize the table model
+        JTable DISKTable = new JTable(DISKTableModel);
+        DISKTable.setBounds(30, 40, 100, 300);
+
+        // adding it to JScrollPane
+        JScrollPane DISKScrollPane = new JScrollPane(DISKTable);
+        DISKPanel.add(DISKScrollPane, DISKTableConstraints);
+
+        DISKPanelWrapper.add(DISKPanel);
+        tabbedPane.addTab("Disk Info", null, DISKPanelWrapper,"Disk Info");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
 
 
         JPanel USBPanelWrapper = new JPanel(new BorderLayout());
@@ -311,7 +380,7 @@ public class gui2_test {
 
         USBPanelWrapper.add(USBPanel);
         tabbedPane.addTab("USB Info", null, USBPanelWrapper,"USB Info");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
         refreshTable(USBTableModel, usb.getUSBInfoAs2DArray()); // Fetch Initial Data for USB
 
 
@@ -376,12 +445,12 @@ public class gui2_test {
 
         PCIPanelWrapper.add(PCIPanel);
         tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
         refreshTable(PCITableModel, pci.getPCIInfo()); // Fetch Initial Data for PCI
         
 
-        tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
+        //tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
+        //tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
 
         frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -407,10 +476,10 @@ public class gui2_test {
                 MEM_right_info_text.setText("<html>" +
                         "<font size=+2> Memory Info </font><br><br>" +
                         "<table cellpadding='5' align='center'>"+
-                        "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + memory.getTotalMemory() +"<font size=-2> GB </font> </td></tr>"+
-                        "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + memory.getUsedMemory() + "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + memory.getFreeMemory()+ "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + memory.getMemoryAsAPercentage() +"<font size=-2> % </font> </td></tr>" +
+                        "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getTotalMemory()) +"<font size=-2> GB </font> </td></tr>"+
+                        "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory())+ "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f",memory.getMemoryAsAPercentage()) +"<font size=-2> % </font> </td></tr>" +
                         "</table></html>");
                 time++;
 

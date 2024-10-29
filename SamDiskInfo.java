@@ -50,9 +50,9 @@ public class SamDiskInfo {
         String[][] diskInfoArray = new String[4][disk.diskCount()]; // Creates the 2d list
         for (int i = 0; i < disk.diskCount(); i++) {
             diskInfoArray[0][i] = disk.getName(i); // Adds the disk names to the first row
-            diskInfoArray[1][i] = String.valueOf(disk.getTotal(i)); // Adds the total for each disk to the second row
-            diskInfoArray[2][i] = String.valueOf(disk.getUsed(i)); // Adds the used storage to the third row
-            diskInfoArray[3][i] = String.valueOf(((double)(disk.getUsed(i) / disk.getTotal(i)))*100); // Adds the percent used to the fourth row
+            diskInfoArray[1][i] = String.valueOf((double) disk.getTotal(i) / 1048576) ; // Adds the total for each disk to the second row
+            diskInfoArray[2][i] = String.valueOf((double) disk.getUsed(i) / 1048576); // Adds the used storage to the third row
+            diskInfoArray[3][i] = String.valueOf(((double)(disk.getUsed(i) / disk.getTotal(i)))*100) ; // Adds the percent used to the fourth row
         }
         return diskInfoArray;
     }

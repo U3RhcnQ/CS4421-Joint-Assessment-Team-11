@@ -1,3 +1,5 @@
+// This should work for memory
+
 public class memory {
 
     private memInfo memory;

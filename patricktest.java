@@ -16,19 +16,19 @@ public class patricktest {
     public void readUSB() {
         usb.read();
     }
-
+    // Bus Count
     public int getBusCount() {
         return usb.busCount();
     }
-
+    // Device Count
     public int getDeviceCount(int bus) {
         return usb.deviceCount(bus);
     }
-
+    // Vendor ID
     public int getVendorID(int bus, int device) {
         return usb.vendorID(bus, device);
     }
-
+    // Product ID
     public int getProductID(int bus, int device) {
         return usb.productID(bus, device);
     }
@@ -64,7 +64,7 @@ public class patricktest {
             totalDevices += getDeviceCount(i);
         }
 
-        // Create and populate the array
+        // Create and give the array data
         String[][] usbArray = new String[totalDevices][6];
         int rowIndex = 0;
 
@@ -139,6 +139,9 @@ public class patricktest {
         vendorMap.put("0x05A9", "OmniVision Technologies, Inc.");
         vendorMap.put("0x06CB", "Synaptics, Inc.");
         vendorMap.put("0x1B1C", "Corsair Memory, Inc.");
+        vendorMap.put("0x0002", "Freescale Semiconductor, Inc.");
+        vendorMap.put("0x0001", "Mercury Computer Systems");
+        vendorMap.put("0x0021", "xyz");
 
         // Product ID's
 
@@ -176,6 +179,11 @@ public class patricktest {
         productMap.put("0xDDDD", "Motor Controller for Robotics");
         productMap.put("0xEEEE", "Camera Interface Module");
         productMap.put("0xFFFF", "Gaming Controller Adapter");
+        productMap.put("0x0002", " Z-Wave Wave 1 device");
+        productMap.put("0x0001", "Virtual Box Placeholder");
+        productMap.put("0x0021", "G502 X PLUS");
+        productMap.put("0x0002", "Virtual Box Placeholder");
+        productMap.put("0x557D", "Sandisk USB Components");
 
     }
 }

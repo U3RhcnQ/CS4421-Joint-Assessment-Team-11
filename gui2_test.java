@@ -1,26 +1,6 @@
 // Flatlaf LAF
-import com.formdev.flatlaf.FlatDarkLaf;
+
 import com.formdev.flatlaf.FlatLightLaf;
-import javax.imageio.ImageIO;
-// Swing Libraries
-import javax.swing.JButton;
-import javax.swing.*;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-//Java Events
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-// Java Charting Library
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -29,6 +9,18 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 
 public class gui2_test {
@@ -39,7 +31,6 @@ public class gui2_test {
     private static SamMclCPU cpu;
     private DefaultPieDataset<String> dataset;
     private JFreeChart chart;
-
 
 
     private static void createAndShowGUI() {
@@ -66,13 +57,6 @@ public class gui2_test {
         CPURightInfo.gridx = 1;
         CPURightInfo.gridy = 1;
         CPURightInfo.anchor = GridBagConstraints.NORTH;
-
-        GridBagConstraints CPUBottomInfo = new GridBagConstraints();
-        CPUBottomInfo.weightx = 1.0;
-        CPUBottomInfo.weighty = 0.4;
-        CPUBottomInfo.fill = GridBagConstraints.BOTH;
-        CPUBottomInfo.gridx = 0;
-        CPUBottomInfo.gridy = 2;
 
         GridBagConstraints TitleConstraints = new GridBagConstraints();
         TitleConstraints.gridx = 0;
@@ -189,12 +173,12 @@ public class gui2_test {
 
         JLabel cpu_right_info_text = new JLabel("<html>" +
                 "<font size=>" + SamMclCPU.cpuName() + "</font><br><br>" +
-                "<table cellpadding='5' align='center'>"+
-                "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + SamMclCPU.socketCount() +" </td></tr>"+
+                "<table cellpadding='5' align='center'>" +
+                "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + SamMclCPU.socketCount() + " </td></tr>" +
                 "<tr><td><font size=-1> Cores: </font></td><td align='center'>" + SamMclCPU.coreCount() + " </td></tr>" +
                 "<tr><td><font size=-1> Logical Processors: </font></td><td align='center'>" + SamMclCPU.logicalCoreCount() + " </td></tr>" +
-                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed()+ " <font size=-2> GHz </font></td></tr>" +
-                "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1d()) +  " <font size=-2> KB </font></td></tr>" +
+                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed() + " <font size=-2> GHz </font></td></tr>" +
+                "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1d()) + " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1i()) + " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1()) + " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L2 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel2()) + " <font size=-2> MB </font></td></tr>" +
@@ -207,7 +191,7 @@ public class gui2_test {
         cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
         //CPUPanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
-        tabbedPane.addTab("CPU Info", null, CPUPanelWrapper,"CPU Info");
+        tabbedPane.addTab("CPU Info", null, CPUPanelWrapper, "CPU Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
 
@@ -247,17 +231,17 @@ public class gui2_test {
 
         JLabel MEM_right_info_text = new JLabel("<html>" +
                 "<font size=+2> Memory Info </font><br><br>" +
-                "<table cellpadding='5' align='center'>"+
-                "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getTotalMemory()) +"<font size=-2> GB </font> </td></tr>"+
-                "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
-                "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory())+ "<font size=-2> GB </font> </td></tr>" +
-                "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f",memory.getMemoryAsAPercentage()) +"<font size=-2> % </font> </td></tr>" +
+                "<table cellpadding='5' align='center'>" +
+                "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getTotalMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f", memory.getMemoryAsAPercentage()) + "<font size=-2> % </font> </td></tr>" +
                 "</table></html>");
 
         MEMPanel.add(MEM_right_info_text, CPURightInfo);
 
         MEMPanelWrapper.add(MEMPanel);
-        tabbedPane.addTab("Memory Info", null, MEMPanelWrapper,"Memory Info");
+        tabbedPane.addTab("Memory Info", null, MEMPanelWrapper, "Memory Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
         JPanel DISKPanelWrapper = new JPanel(new BorderLayout());
@@ -282,8 +266,8 @@ public class gui2_test {
             double freeSpace = totalSpace - usedSpace; // Calculate free space
 
             // Populate the dataset with used and free space
-            diskDataset.setValue("Used " + String.format("%.2f",usedSpace) + " GB", usedSpace);
-            diskDataset.setValue("Free " + String.format("%.2f",freeSpace) + " GB", freeSpace);
+            diskDataset.setValue("Used " + String.format("%.2f", usedSpace) + " GB", usedSpace);
+            diskDataset.setValue("Free " + String.format("%.2f", freeSpace) + " GB", freeSpace);
 
             // Create the pie chart for the current disk
             JFreeChart pieChart = ChartFactory.createPieChart(
@@ -296,16 +280,20 @@ public class gui2_test {
 
             // Wrap the pie chart in a ChartPanel
             ChartPanel chartPanel2 = new ChartPanel(pieChart);
+            chartPanel2.setPreferredSize(new Dimension(200, 200));
 
             DISKChartPanel.add(chartPanel2);
             // You can now use 'pieChart' to display or add it to your application
             // Add code here to display or save the chart
         }
 
-        DISKPanel.add(DISKChartPanel, MEMChartPanelConstraints);
+        // Place DISKChartPanel into a JScrollPane for scrolling
+        JScrollPane DISKScrollPane = new JScrollPane(DISKChartPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        DISKPanel.add(DISKScrollPane, MEMChartPanelConstraints);
 
         // Column Names
-        String[] DISKColumnNames = { "Bus", "Device", "Vendor ID" };
+        String[] DISKColumnNames = {"Name", "Capacity", "Used", "% Used"};
 
         // Initializing the JTable
         DISKTableModel = new DefaultTableModel(DISKColumnNames, 0); // Initialize the table model
@@ -313,12 +301,13 @@ public class gui2_test {
         DISKTable.setBounds(30, 40, 100, 300);
 
         // adding it to JScrollPane
-        JScrollPane DISKScrollPane = new JScrollPane(DISKTable);
-        DISKPanel.add(DISKScrollPane, DISKTableConstraints);
+        JScrollPane DISKScrollPane2 = new JScrollPane(DISKTable);
+        DISKPanel.add(DISKScrollPane2, DISKTableConstraints);
 
         DISKPanelWrapper.add(DISKPanel);
-        tabbedPane.addTab("Disk Info", null, DISKPanelWrapper,"Disk Info");
+        tabbedPane.addTab("Disk Info", null, DISKPanelWrapper, "Disk Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
+        refreshTable(DISKTableModel, SamDiskInfo.diskTable()); // Fetch Initial Data for Disk
 
 
         JPanel USBPanelWrapper = new JPanel(new BorderLayout());
@@ -332,7 +321,7 @@ public class gui2_test {
         USBPanel.add(USBRefresh, RefreshButtonConstraints);
 
         // Column Names
-        String[] USBColumnNames = { "Bus", "Device", "Vendor ID", "Vendor", "Device ID", "Device" };
+        String[] USBColumnNames = {"Bus", "Device", "Vendor ID", "Vendor", "Device ID", "Device"};
 
         // Initializing the JTable
         USBTableModel = new DefaultTableModel(USBColumnNames, 0); // Initialize the table model
@@ -379,7 +368,7 @@ public class gui2_test {
         });
 
         USBPanelWrapper.add(USBPanel);
-        tabbedPane.addTab("USB Info", null, USBPanelWrapper,"USB Info");
+        tabbedPane.addTab("USB Info", null, USBPanelWrapper, "USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
         refreshTable(USBTableModel, usb.getUSBInfoAs2DArray()); // Fetch Initial Data for USB
 
@@ -396,7 +385,7 @@ public class gui2_test {
         PCIPanel.add(PCIRefresh, RefreshButtonConstraints);
 
         // Column Names
-        String[] PCIColumnNames = { "Bus", "Device", "Function", "Vendor ID", "Vendor", "Device ID", "Device" };
+        String[] PCIColumnNames = {"Bus", "Device", "Function", "Vendor ID", "Vendor", "Device ID", "Device"};
 
         // Initializing the JTable
         PCITableModel = new DefaultTableModel(PCIColumnNames, 0); // Initialize the table model
@@ -444,10 +433,10 @@ public class gui2_test {
         });
 
         PCIPanelWrapper.add(PCIPanel);
-        tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
+        tabbedPane.addTab("PCI Info", null, PCIPanelWrapper, "PCI Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
         refreshTable(PCITableModel, pci.getPCIInfo()); // Fetch Initial Data for PCI
-        
+
 
         //tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
         //tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
@@ -463,6 +452,7 @@ public class gui2_test {
         // Timer to update the chart every second
         Timer timer = new Timer(10, new ActionListener() {
             int time = 0;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Add Data
@@ -475,11 +465,11 @@ public class gui2_test {
 
                 MEM_right_info_text.setText("<html>" +
                         "<font size=+2> Memory Info </font><br><br>" +
-                        "<table cellpadding='5' align='center'>"+
-                        "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getTotalMemory()) +"<font size=-2> GB </font> </td></tr>"+
-                        "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f",memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory())+ "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f",memory.getMemoryAsAPercentage()) +"<font size=-2> % </font> </td></tr>" +
+                        "<table cellpadding='5' align='center'>" +
+                        "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getTotalMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                        "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f", memory.getMemoryAsAPercentage()) + "<font size=-2> % </font> </td></tr>" +
                         "</table></html>");
                 time++;
 
@@ -500,12 +490,11 @@ public class gui2_test {
 
     }
 
-    private static void refreshTable(DefaultTableModel table, String[][] newData ) {
+    // Helper to make updating Tables Easier
+    private static void refreshTable(DefaultTableModel table, String[][] newData) {
         // Get new data (2D array from another function)
-
         // Clear existing data
         table.setRowCount(0); // Clear existing rows
-
         // Add new data to the table model
         for (String[] row : newData) {
             table.addRow(row); // Add each row to the table model

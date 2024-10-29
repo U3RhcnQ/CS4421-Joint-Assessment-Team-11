@@ -15,28 +15,24 @@ public class SamMclCPU {
     }
 
     public static String cpuName() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return cpu.getModel();
     }
 
     public static int socketCount() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return cpu.socketCount();
     }
 
     public static int coreCount() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return cpu.coresPerSocket();
     }
 
     public static int logicalCoreCount() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
 
@@ -56,7 +52,6 @@ public class SamMclCPU {
     }
 
     public static String baseSpeed() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         String model = cpu.getModel(); // getting the model as it tells us the base speed at the end of the string
@@ -74,35 +69,30 @@ public class SamMclCPU {
 
     // Individual Calls for formatting reasons
     public static double cacheSizel1d() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return (double) cpu.l1dCacheSize() * 0.001; // times by 0.001 for kilobytes
     }
 
     public static double cacheSizel1i() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return (double) cpu.l1iCacheSize() * 0.001; // times by 0.001 for kilobytes
     }
 
     public static double cacheSizel1() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return (double) cpu.l1iCacheSize() * 0.001 + cpu.l1dCacheSize() * 0.001; // To get total L1 cache we add both
     }
 
     public static double cacheSizel2() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return (double) cpu.l2CacheSize() * 0.000001; // times by 0.000001 for kilobytes
     }
 
     public static double cacheSizel3() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(0);
         return (double) cpu.l3CacheSize() * 0.000001; // times by 0.000001 for kilobytes
@@ -110,7 +100,6 @@ public class SamMclCPU {
 
 
     public static void idleTimes() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
 
         // Sleep for 1 second and display the idle time percentage for
@@ -125,7 +114,6 @@ public class SamMclCPU {
     }
 
     public static double averageIdleTimes() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         //cpu.read(1);
 
@@ -146,7 +134,6 @@ public class SamMclCPU {
     }
 
     public static double averageUserTimes() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         //cpu.read(1);
 
@@ -168,7 +155,6 @@ public class SamMclCPU {
     }
 
     public static double averageSystemTimes() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         //cpu.read(1);
 
@@ -190,7 +176,6 @@ public class SamMclCPU {
     }
 
     public static double utilisationTime() {
-        System.loadLibrary("sysInfo");
         cpuInfo cpu = new cpuInfo();
         cpu.read(1);
 

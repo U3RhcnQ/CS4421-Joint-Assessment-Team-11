@@ -158,10 +158,12 @@ public class gui2_test {
         CPUpanel.add(chartPanel, CPUChart);
 
         JLabel cpu_right_info_text = new JLabel("<html>" +
-                "<font size=-1>" + "</font><br><br>" +
+                "<font size=-1>" + SamMclCPU.cpuName() + "</font><br><br>" +
                 "<table cellpadding='5' align='center'>"+
-                "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + " </td></tr>"+
-                "<tr><td><font size=-1> Cores: </font></td><td align='center'>" +  " </td></tr>" +
+                "<tr><td><font size=-1> Sockets: </font></td><td align='center'>" + SamMclCPU.socketCount() +" </td></tr>"+
+                "<tr><td><font size=-1> Cores: </font></td><td align='center'>" + SamMclCPU.coreCount() + " </td></tr>" +
+                "<tr><td><font size=-1> Logical Processors: </font></td><td align='center'>" + SamMclCPU.logicalCoreCount() + " </td></tr>" +
+                "<tr><td><font size=-1> Base Speed: </font></td><td align='center'>" + SamMclCPU.baseSpeed()+ " </td></tr>" +
                 "<tr><td><font size=-1> L1 Data Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1d()) +  " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Intr Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1i()) + " <font size=-2> KB </font></td></tr>" +
                 "<tr><td><font size=-1> L1 Cache: </font></td><td align='center'>" + String.format("%.1f", SamMclCPU.cacheSizel1()) + " <font size=-2> KB </font></td></tr>" +
@@ -176,7 +178,7 @@ public class gui2_test {
         CPUpanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
         // Timer to update the chart every second
-        Timer timer = new Timer(100, new ActionListener() {
+        Timer timer = new Timer(10, new ActionListener() {
             int time = 0;
             int counter;
             int sum;

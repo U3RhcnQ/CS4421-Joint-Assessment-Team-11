@@ -246,7 +246,7 @@ public class GUI {
         // Set Keyboard shortcut toAlt+n and set appropriate tab index
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-
+        // Similar to CPU above
         JPanel MEMPanelWrapper = new JPanel(new BorderLayout());
         MEMPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         JPanel MEMPanel = new JPanel(new GridBagLayout());
@@ -294,19 +294,25 @@ public class GUI {
 
         MEMPanelWrapper.add(MEMPanel);
         tabbedPane.addTab("Memory Info", memIcon, MEMPanelWrapper, "Memory Info");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
+        // Disk Info here
+        // Create Wrapper
         JPanel DISKPanelWrapper = new JPanel(new BorderLayout());
+        // Add empty border
         DISKPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        // Create Main Tab Panel
         JPanel DISKPanel = new JPanel(new GridBagLayout());
         JLabel DISKTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>DISK Info</span> " +
                 "<span style='font-size:11px;'> - Data will automatically refresh every 10 seconds </span></html>");
         DISKPanel.add(DISKTitle, TitleConstraints);
 
+        // Get Disk Info to populate table and pie charts
+        // Very Similar SamDiskInfo.diskTable() calls but this one does no formatting and the other one does
         String[][] DiskInfo = SamDiskInfo.diskTable();
 
-        JPanel DISKChartPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // Dynamically create rows, with 2 columns
-
+        // Create new chart panel to hold all the charts Dynamically create rows, with 2 columns
+        JPanel DISKChartPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         for (String[] strings : DiskInfo) {  // Loop through each disk
 
             // Create a dataset for the current disk
@@ -335,18 +341,19 @@ public class GUI {
             ChartPanel chartPanel2 = new ChartPanel(pieChart);
             chartPanel2.setPreferredSize(new Dimension(200, 200));
 
+            // Add each pie chart to the chart Panel
             DISKChartPanel.add(chartPanel2);
-            // You can now use 'pieChart' to display or add it to your application
-            // Add code here to display or save the chart
         }
 
         // Place DISKChartPanel into a JScrollPane for scrolling
+        //  is only set to Vertical and horizontal is suppressed as otherwise it was overflowing
         JScrollPane DISKScrollPane = new JScrollPane(DISKChartPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        // Add the scrollPane to the main panel
         DISKPanel.add(DISKScrollPane, MEMChartPanelConstraints);
 
-        // Column Names
-        String[] DISKColumnNames = {"Name", "Capacity", "Used", "% Used"};
+        // Table Code
+        String[] DISKColumnNames = {"Name", "Capacity", "Used", "% Used"}; // Column Names
 
         // Initializing the JTable
         DISKTableModel = new DefaultTableModel(DISKColumnNames, 0); // Initialize the table model
@@ -359,7 +366,7 @@ public class GUI {
 
         DISKPanelWrapper.add(DISKPanel);
         tabbedPane.addTab("Disk Info", diskIcon, DISKPanelWrapper, "Disk Info");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
+        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
         refreshTable(DISKTableModel, SamDiskInfo.diskTable2()); // Fetch Initial Data for Disk
 
 
@@ -385,18 +392,22 @@ public class GUI {
         JScrollPane USBScrollPane = new JScrollPane(USBTable);
         USBPanel.add(USBScrollPane, TableConstraints);
 
+        // Create a Text area with line wrapping and non-editable
         JTextArea USBText = new JTextArea("Please Select a Device to view Details");
         USBText.setLineWrap(true);               // Enable line wrap
         USBText.setWrapStyleWord(true);          // Wrap at word boundaries
         USBText.setEditable(false); // Set non-editable
+
+        // Set preferred sze and add to the Panel
         USBText.setPreferredSize(new Dimension(120, USBText.getPreferredSize().height));
-        //USBText.setBorder(new EmptyBorder(10, 10, 10, 10));  // Padding on all sides
         USBPanel.add(USBText, TextAreaConstraints);
 
         // Selection Listener for displaying selected row in USBText
         USBTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            // override default so we can add our own code
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                // Check if the row is done being selected and check if the row is actually selected overall - Good practice as not doing it can lead to errors
                 if (!e.getValueIsAdjusting() && USBTable.getSelectedRow() != -1) {
                     // Get selected row index
                     int selectedRow = USBTable.getSelectedRow();
@@ -404,8 +415,10 @@ public class GUI {
                     // Display row details in the JTextArea
                     StringBuilder details = new StringBuilder();
                     for (int i = 0; i < USBTable.getColumnCount(); i++) {
+                        // Get selected data in the line
                         String columnName = USBTable.getColumnName(i);
                         Object value = USBTable.getValueAt(selectedRow, i);
+                        // Prepare for printing and add style
                         details.append(columnName).append(": ").append(value).append("\n");
                     }
                     USBText.setText(details.toString());
@@ -413,6 +426,7 @@ public class GUI {
             }
         });
 
+        // Refresh Button logic ads a listener and when clicked executes the refresh table method
         DefaultTableModel finalUSBTableModel = USBTableModel;
         USBRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -420,6 +434,7 @@ public class GUI {
             }
         });
 
+        // Add USB to the tabbedPane
         USBPanelWrapper.add(USBPanel);
         tabbedPane.addTab("USB Info", usbIcon, USBPanelWrapper, "USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
@@ -448,18 +463,20 @@ public class GUI {
         JScrollPane PCIScrollPane = new JScrollPane(PCITable);
         PCIPanel.add(PCIScrollPane, TableConstraints);
 
+        // Create a Text area with line wrapping and non-editable
         JTextArea PCIText = new JTextArea("Please Select a Device to view Details");
         PCIText.setLineWrap(true);               // Enable line wrap
         PCIText.setWrapStyleWord(true);          // Wrap at word boundaries
         PCIText.setEditable(false); // Set non-editable
         PCIText.setPreferredSize(new Dimension(120, PCIText.getPreferredSize().height));
-        //PCIText.setBorder(new EmptyBorder(10, 10, 10, 10));  // Padding on all sides
+        // Add it to the main panel
         PCIPanel.add(PCIText, TextAreaConstraints);
 
         // Selection Listener for displaying selected row in PCIText
         PCITable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                // Check if the row is done being selected and check if the row is actually selected overall - Good practice as not doing it can lead to errors
                 if (!e.getValueIsAdjusting() && PCITable.getSelectedRow() != -1) {
                     // Get selected row index
                     int selectedRow = PCITable.getSelectedRow();
@@ -467,52 +484,63 @@ public class GUI {
                     // Display row details in the JTextArea
                     StringBuilder details = new StringBuilder();
                     for (int i = 0; i < PCITable.getColumnCount(); i++) {
+                        // Get selected data in the line
                         String columnName = PCITable.getColumnName(i);
                         Object value = PCITable.getValueAt(selectedRow, i);
+                        // Prepare for printing and add style
                         details.append(columnName).append(": ").append(value).append("\n");
                     }
+                    // Convert output to string
                     PCIText.setText(details.toString());
                 }
             }
         });
 
+        // PCI Refresh Code very similar to USB
         DefaultTableModel finalPCITableModel = PCITableModel;
         PCIRefresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //System.out.print(Arrays.deepToString(pci.getPCIInfo()));
                 refreshTable(finalPCITableModel, pci.getPCIInfo()); // Pass the table model to the refresh method
             }
         });
 
+        // Add PCI stuff to the Tabbed Pane
         PCIPanelWrapper.add(PCIPanel);
         tabbedPane.addTab("PCI Info", pciIcon, PCIPanelWrapper, "PCI Info");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
+        tabbedPane.setMnemonicAt(4, KeyEvent.VK_5);
         refreshTable(PCITableModel, pci.getPCIInfo()); // Fetch Initial Data for PCI
 
 
+        // Final draw code populates the frame
+        // Ad the Tabbed Pane here
         frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+        // Set Action on close
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(tabbedPane);
+        // Set Preferred Size
         frame.setPreferredSize(new Dimension(1100, 700));
+        // Draw the stuff
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         // Timer to update the chart every second
         Timer timer = new Timer(10, new ActionListener() {
+            // Set Up local variables
             int time = 0;
 
+            // override the default behavior of action so we can run our code
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> { // Apparently this is good practice for UI Updates
-                    // Add Data
+
+                    // Add New Data
                     CPU1.add(time, SamMclCPU.utilisationTime());
                     CPU2.add(time, SamMclCPU.averageIdleTimes());
                     CPU3.add(time, SamMclCPU.averageUserTimes());
                     CPU4.add(time, SamMclCPU.averageSystemTimes());
-                    //System.out.println(memory.getTotalMemory());
                     MEMSeries.add(time, memory.getMemoryAsAPercentage());
 
+                    // Update label for memory with new text uses same HTML formatting
                     MEM_right_info_text.setText("<html>" +
                             "<font size=+2> Memory Info </font><br><br>" +
                             "<table cellpadding='5' align='center'>" +
@@ -522,11 +550,12 @@ public class GUI {
                             "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f", memory.getMemoryAsAPercentage()) + "<font size=-2> % </font> </td></tr>" +
                             "</table></html>");
 
-                    //updatePieCharts(SamDiskInfo.diskTable());
-
+                    // Increment time for charts
                     time++;
 
                     // Check if the series has more than 60 entries, remove the oldest if true
+                    // For CPU we can assume if one value has hit 60 the rest have as well so we can clear them
+
                     if (CPU1.getItemCount() > 60) {
                         CPU1.remove(0); // Remove the first (oldest) entry
                         CPU2.remove(0); // Remove the first (oldest) entry
@@ -534,6 +563,7 @@ public class GUI {
                         CPU4.remove(0); // Remove the first (oldest) entry
                     }
                     // Check if the series has more than 60 entries, remove the oldest if true
+                    // Same logic for memory
                     if (MEMSeries.getItemCount() > 60) {
                         MEMSeries.remove(0); // Remove the first (oldest) entry
                     }
@@ -541,23 +571,26 @@ public class GUI {
             }
         });
 
+        // Start Timer
         timer.start();
 
 
         Timer timer2 = new Timer(1000, new ActionListener() {
-            @Override
+
+            // override the default behavior of action so we can run our code
+            @Override //Function that executes in the timer
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> { // Apparently this is good practice for UI Updates
 
+                    // Update PCI and USB tables with the refreshTable method
                     refreshTable(PCITableModel, pci.getPCIInfo());
                     refreshTable(USBTableModel, usb.getUSBInfoAs2DArray());
-                    //System.out.println(Arrays.deepToString(disk.diskTable2()));
-                    //refreshTable(DISKTableModel, disk.diskTable2());
 
                 });
             }
         });
 
+        // Start the timer
         timer2.start();
 
     }
@@ -566,7 +599,6 @@ public class GUI {
     private static void refreshTable(DefaultTableModel table, String[][] newData) {
         SwingUtilities.invokeLater(() -> {
             // Get new data (2D array from another function)
-            // Clear existing data
             table.setRowCount(0); // Clear existing rows
             // Add new data to the table model
             for (String[] row : newData) {
@@ -576,26 +608,14 @@ public class GUI {
     }
 
     public static void main(final String[] args) {
-        // Startup
+
+        // Startup loading libraries and instancing classes
+        // Don't need to instance the CPU class as it's a utility class and can be called directly
         SwingUtilities.invokeLater(GUI::createAndShowGUI);
         System.loadLibrary("sysinfo");
         usb = new patricktest();
         pci = new PciTJ();
         memory = new memory();
-        //disk = new SamDiskInfo();
-    }
 
-    // Helper to make updating PieCharts Easier - CURSED
-    public void updatePieCharts(String[][] newDiskInfo) {
-        for (int i = 0; i < datasets.size(); i++) {
-            DefaultPieDataset<String> diskDataset = datasets.get(i);
-
-            double usedSpace = Double.parseDouble(newDiskInfo[2][i]);
-            double totalSpace = Double.parseDouble(newDiskInfo[1][i]);
-            double freeSpace = totalSpace - usedSpace;
-
-            diskDataset.setValue("Used " + String.format("%.2f", usedSpace) + " GB", usedSpace);
-            diskDataset.setValue("Free " + String.format("%.2f", freeSpace) + " GB", freeSpace);
-        }
     }
 }

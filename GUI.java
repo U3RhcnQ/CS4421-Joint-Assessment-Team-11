@@ -15,15 +15,18 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class gui2_test {
+public class GUI {
 
     private static patricktest usb;
     private static PciTJ pci;
@@ -31,6 +34,7 @@ public class gui2_test {
     private static SamMclCPU cpu;
     private DefaultPieDataset<String> dataset;
     private JFreeChart chart;
+    private List<DefaultPieDataset<String>> datasets = new ArrayList<>();// Declare the datasets list to store each dataset
 
 
     private static void createAndShowGUI() {
@@ -40,6 +44,7 @@ public class gui2_test {
         DefaultTableModel USBTableModel = null; // Declare the table model
         DefaultTableModel PCITableModel; // Declare the table model
         DefaultTableModel DISKTableModel;
+
 
         // Layout
         GridBagConstraints CPUChart = new GridBagConstraints();
@@ -252,6 +257,7 @@ public class gui2_test {
         DISKPanel.add(DISKTitle, TitleConstraints);
 
         String[][] DiskInfo = SamDiskInfo.diskTable();
+
         JPanel DISKChartPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // Dynamically create rows, with 2 columns
 
         for (int i = 0; i < DiskInfo[0].length; i++) {  // Loop through each disk
@@ -471,6 +477,9 @@ public class gui2_test {
                         "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory()) + "<font size=-2> GB </font> </td></tr>" +
                         "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f", memory.getMemoryAsAPercentage()) + "<font size=-2> % </font> </td></tr>" +
                         "</table></html>");
+
+                //updatePieCharts(SamDiskInfo.diskTable());
+
                 time++;
 
                 // Check if the series has more than 60 entries, remove the oldest if true
@@ -501,15 +510,28 @@ public class gui2_test {
         }
     }
 
+    // Helper to make updating PieCharts Easier
+    public void updatePieCharts(String[][] newDiskInfo) {
+        for (int i = 0; i < datasets.size(); i++) {
+            DefaultPieDataset<String> diskDataset = datasets.get(i);
+
+            double usedSpace = Double.parseDouble(newDiskInfo[2][i]);
+            double totalSpace = Double.parseDouble(newDiskInfo[1][i]);
+            double freeSpace = totalSpace - usedSpace;
+
+            diskDataset.setValue("Used " + String.format("%.2f", usedSpace) + " GB", usedSpace);
+            diskDataset.setValue("Free " + String.format("%.2f", freeSpace) + " GB", freeSpace);
+        }
+    }
+
+
     public static void main(final String[] args) {
         // Startup
-        SwingUtilities.invokeLater(gui2_test::createAndShowGUI);
+        SwingUtilities.invokeLater(GUI::createAndShowGUI);
         System.loadLibrary("sysinfo");
-        sysInfo info = new sysInfo();
         usb = new patricktest();
         pci = new PciTJ();
         memory = new memory();
-        //cpu = new SamMclCPU();
 
     }
 }

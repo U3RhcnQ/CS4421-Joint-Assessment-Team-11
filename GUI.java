@@ -23,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,6 +33,7 @@ public class GUI {
     private static PciTJ pci;
     private static memory memory;
     private static SamMclCPU cpu;
+    public static SamDiskInfo disk;
     private DefaultPieDataset<String> dataset;
     private JFreeChart chart;
     private List<DefaultPieDataset<String>> datasets = new ArrayList<>();// Declare the datasets list to store each dataset
@@ -41,7 +43,7 @@ public class GUI {
 
         FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
         final JFrame frame = new JFrame("TaskSys"); // Title
-        DefaultTableModel USBTableModel = null; // Declare the table model
+        DefaultTableModel USBTableModel; // Declare the table model
         DefaultTableModel PCITableModel; // Declare the table model
         DefaultTableModel DISKTableModel;
 
@@ -253,22 +255,22 @@ public class GUI {
         DISKPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         JPanel DISKPanel = new JPanel(new GridBagLayout());
         JLabel DISKTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>DISK Info</span> " +
-                "<span style='font-size:11px;'> - Data will automatically refresh every 10 seconds or manually</span></html>");
+                "<span style='font-size:11px;'> - Data will automatically refresh every 10 seconds </span></html>");
         DISKPanel.add(DISKTitle, TitleConstraints);
 
         String[][] DiskInfo = SamDiskInfo.diskTable();
 
         JPanel DISKChartPanel = new JPanel(new GridLayout(0, 2, 10, 10)); // Dynamically create rows, with 2 columns
 
-        for (int i = 0; i < DiskInfo[0].length; i++) {  // Loop through each disk
+        for (String[] strings : DiskInfo) {  // Loop through each disk
 
             // Create a dataset for the current disk
             DefaultPieDataset<String> diskDataset = new DefaultPieDataset<>();
 
             // Add data to the dataset for the current disk
-            String diskName = DiskInfo[0][i]; // Disk name
-            double usedSpace = Double.parseDouble(DiskInfo[2][i]); // Used space
-            double totalSpace = Double.parseDouble(DiskInfo[1][i]); // Total space
+            String diskName = strings[0]; // Disk name
+            double usedSpace = Double.parseDouble(strings[2]); // Used space
+            double totalSpace = Double.parseDouble(strings[1]); // Total space
             double freeSpace = totalSpace - usedSpace; // Calculate free space
 
             // Populate the dataset with used and free space
@@ -313,7 +315,7 @@ public class GUI {
         DISKPanelWrapper.add(DISKPanel);
         tabbedPane.addTab("Disk Info", null, DISKPanelWrapper, "Disk Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
-        refreshTable(DISKTableModel, SamDiskInfo.diskTable()); // Fetch Initial Data for Disk
+        refreshTable(DISKTableModel, SamDiskInfo.diskTable2()); // Fetch Initial Data for Disk
 
 
         JPanel USBPanelWrapper = new JPanel(new BorderLayout());
@@ -377,7 +379,6 @@ public class GUI {
         tabbedPane.addTab("USB Info", null, USBPanelWrapper, "USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
         refreshTable(USBTableModel, usb.getUSBInfoAs2DArray()); // Fetch Initial Data for USB
-
 
         // PCI Screen
         JPanel PCIPanelWrapper = new JPanel(new BorderLayout());
@@ -444,9 +445,6 @@ public class GUI {
         refreshTable(PCITableModel, pci.getPCIInfo()); // Fetch Initial Data for PCI
 
 
-        //tabbedPane.addTab("PCI Info", null, PCIPanelWrapper,"PCI Info");
-        //tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
-
         frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(tabbedPane);
@@ -461,56 +459,78 @@ public class GUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add Data
-                CPU1.add(time, SamMclCPU.utilisationTime());
-                CPU2.add(time, SamMclCPU.averageIdleTimes());
-                CPU3.add(time, SamMclCPU.averageUserTimes());
-                CPU4.add(time, SamMclCPU.averageSystemTimes());
-                //System.out.println(memory.getTotalMemory());
-                MEMSeries.add(time, memory.getMemoryAsAPercentage());
+                SwingUtilities.invokeLater(() -> { // Apparently this is good practice for UI Updates
+                    // Add Data
+                    CPU1.add(time, SamMclCPU.utilisationTime());
+                    CPU2.add(time, SamMclCPU.averageIdleTimes());
+                    CPU3.add(time, SamMclCPU.averageUserTimes());
+                    CPU4.add(time, SamMclCPU.averageSystemTimes());
+                    //System.out.println(memory.getTotalMemory());
+                    MEMSeries.add(time, memory.getMemoryAsAPercentage());
 
-                MEM_right_info_text.setText("<html>" +
-                        "<font size=+2> Memory Info </font><br><br>" +
-                        "<table cellpadding='5' align='center'>" +
-                        "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getTotalMemory()) + "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory()) + "<font size=-2> GB </font> </td></tr>" +
-                        "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f", memory.getMemoryAsAPercentage()) + "<font size=-2> % </font> </td></tr>" +
-                        "</table></html>");
+                    MEM_right_info_text.setText("<html>" +
+                            "<font size=+2> Memory Info </font><br><br>" +
+                            "<table cellpadding='5' align='center'>" +
+                            "<tr><td><font size=> Total Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getTotalMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                            "<tr><td><font size=> Used Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getUsedMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                            "<tr><td><font size=> Free Memory: </font></td><td align='center'>" + String.format("%.2f", memory.getFreeMemory()) + "<font size=-2> GB </font> </td></tr>" +
+                            "<tr><td><font size=> Percentage Used: </font></td><td align='center'>" + String.format("%.2f", memory.getMemoryAsAPercentage()) + "<font size=-2> % </font> </td></tr>" +
+                            "</table></html>");
 
-                //updatePieCharts(SamDiskInfo.diskTable());
+                    //updatePieCharts(SamDiskInfo.diskTable());
 
-                time++;
+                    time++;
 
-                // Check if the series has more than 60 entries, remove the oldest if true
-                if (CPU1.getItemCount() > 60) {
-                    CPU1.remove(0); // Remove the first (oldest) entry
-                    CPU2.remove(0); // Remove the first (oldest) entry
-                    CPU3.remove(0); // Remove the first (oldest) entry
-                    CPU4.remove(0); // Remove the first (oldest) entry
-                }
-                // Check if the series has more than 60 entries, remove the oldest if true
-                if (MEMSeries.getItemCount() > 60) {
-                    MEMSeries.remove(0); // Remove the first (oldest) entry
-                }
+                    // Check if the series has more than 60 entries, remove the oldest if true
+                    if (CPU1.getItemCount() > 60) {
+                        CPU1.remove(0); // Remove the first (oldest) entry
+                        CPU2.remove(0); // Remove the first (oldest) entry
+                        CPU3.remove(0); // Remove the first (oldest) entry
+                        CPU4.remove(0); // Remove the first (oldest) entry
+                    }
+                    // Check if the series has more than 60 entries, remove the oldest if true
+                    if (MEMSeries.getItemCount() > 60) {
+                        MEMSeries.remove(0); // Remove the first (oldest) entry
+                    }
+                });
             }
         });
+
         timer.start();
+
+
+        Timer timer2 = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> { // Apparently this is good practice for UI Updates
+
+                    refreshTable(PCITableModel, pci.getPCIInfo());
+                    refreshTable(USBTableModel, usb.getUSBInfoAs2DArray());
+                    //System.out.println(Arrays.deepToString(disk.diskTable2()));
+                    //refreshTable(DISKTableModel, disk.diskTable2());
+
+                });
+            }
+        });
+
+        timer2.start();
 
     }
 
     // Helper to make updating Tables Easier
     private static void refreshTable(DefaultTableModel table, String[][] newData) {
-        // Get new data (2D array from another function)
-        // Clear existing data
-        table.setRowCount(0); // Clear existing rows
-        // Add new data to the table model
-        for (String[] row : newData) {
-            table.addRow(row); // Add each row to the table model
-        }
+        SwingUtilities.invokeLater(() -> {
+            // Get new data (2D array from another function)
+            // Clear existing data
+            table.setRowCount(0); // Clear existing rows
+            // Add new data to the table model
+            for (String[] row : newData) {
+                table.addRow(row); // Add each row to the table model
+            }
+        });
     }
 
-    // Helper to make updating PieCharts Easier
+    // Helper to make updating PieCharts Easier - CURSED
     public void updatePieCharts(String[][] newDiskInfo) {
         for (int i = 0; i < datasets.size(); i++) {
             DefaultPieDataset<String> diskDataset = datasets.get(i);
@@ -524,7 +544,6 @@ public class GUI {
         }
     }
 
-
     public static void main(final String[] args) {
         // Startup
         SwingUtilities.invokeLater(GUI::createAndShowGUI);
@@ -532,6 +551,6 @@ public class GUI {
         usb = new patricktest();
         pci = new PciTJ();
         memory = new memory();
-
+        //disk = new SamDiskInfo();
     }
 }

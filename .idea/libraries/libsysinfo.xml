@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="libsysinfo">
+    <CLASSES />
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/libsysinfo" />
+    </NATIVE>
+    <SOURCES />
+  </library>
+</component>

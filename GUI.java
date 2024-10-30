@@ -15,7 +15,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +22,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,30 +30,26 @@ public class GUI {
     private static patricktest usb;
     private static PciTJ pci;
     private static memory memory;
-    private static SamMclCPU cpu;
-    public static SamDiskInfo disk;
-    private DefaultPieDataset<String> dataset;
-    private JFreeChart chart;
-    private List<DefaultPieDataset<String>> datasets = new ArrayList<>();// Declare the datasets list to store each dataset
+    private final List<DefaultPieDataset<String>> datasets = new ArrayList<>(); // Declare the datasets list to store each dataset
 
 
     private static void createAndShowGUI() {
 
-        FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatDark.
-        final JFrame frame = new JFrame("TaskSys"); // Title
-        DefaultTableModel USBTableModel; // Declare the table model
-        DefaultTableModel PCITableModel; // Declare the table model
+        FlatLightLaf.setup();  //Must be called first of all Swing code as this sets the look and feel to FlatLAF.
+        final JFrame frame = new JFrame("TaskSys"); // Set Title
+        DefaultTableModel USBTableModel; // Declare the table models
+        DefaultTableModel PCITableModel;
         DefaultTableModel DISKTableModel;
 
 
-        // Layout
+        // Layout Code all styling is here
         GridBagConstraints CPUChart = new GridBagConstraints();
-        CPUChart.weightx = 0.7;
-        CPUChart.weighty = 0.6;
-        CPUChart.fill = GridBagConstraints.BOTH;
-        CPUChart.gridx = 0;
-        CPUChart.gridy = 1;
-        CPUChart.insets = new Insets(10, 10, 10, 10);
+        CPUChart.weightx = 0.7; //Horizontal priority
+        CPUChart.weighty = 0.6; // vertical priority
+        CPUChart.fill = GridBagConstraints.BOTH; // Expand in both directions
+        CPUChart.gridx = 0; // Row 0
+        CPUChart.gridy = 1; // Column 1
+        CPUChart.insets = new Insets(10, 10, 10, 10); // 10 Padding on each side
 
         GridBagConstraints CPURightInfo = new GridBagConstraints();
         CPURightInfo.weightx = 0.1;
@@ -70,9 +64,9 @@ public class GUI {
         TitleConstraints.gridy = 0;
         TitleConstraints.weightx = 1;
         TitleConstraints.weighty = 0;
-        TitleConstraints.fill = GridBagConstraints.HORIZONTAL;
+        TitleConstraints.fill = GridBagConstraints.HORIZONTAL; // only expand Horizontally
         TitleConstraints.ipadx = 0;
-        TitleConstraints.ipady = 30;
+        TitleConstraints.ipady = 30; // 30 padding vertically on both top and bottom
         TitleConstraints.anchor = GridBagConstraints.WEST;  // Align to left
         TitleConstraints.gridwidth = 2;
 
@@ -90,7 +84,7 @@ public class GUI {
         DISKTableConstraints.weightx = 0.3;
         DISKTableConstraints.weighty = 1;
         DISKTableConstraints.fill = GridBagConstraints.BOTH;
-        DISKTableConstraints.anchor = GridBagConstraints.NORTH;  // Align to left
+        DISKTableConstraints.anchor = GridBagConstraints.NORTH;  // Align to top
 
         GridBagConstraints RefreshButtonConstraints = new GridBagConstraints();
         RefreshButtonConstraints.gridx = 0;
@@ -112,7 +106,6 @@ public class GUI {
         TextAreaConstraints.ipadx = 0;
         TextAreaConstraints.ipady = 0;
         TextAreaConstraints.anchor = GridBagConstraints.EAST;  // Align to right
-        //TextAreaConstraints.insets = new Insets(0, 10, 0, 0);
 
         GridBagConstraints MEMChartPanelConstraints = new GridBagConstraints();
         MEMChartPanelConstraints.weightx = 0.7;
@@ -124,27 +117,76 @@ public class GUI {
 
 
         // Attempt to load the image and handle exception if not available
+        // Initialise to null in case it all breaks
+        ImageIcon cpuIcon = null;
+        ImageIcon usbIcon = null;
+        ImageIcon pciIcon = null;
+        ImageIcon diskIcon = null;
+        ImageIcon memIcon = null;
+
         try {
             // Load the logo image
             Image icon = ImageIO.read(new File("images/icon.png"));
             // Set the icon for the JFrame
             frame.setIconImage(icon);
+
+            //The SCALE_SMOOTH option gives a better quality result for the scaling.
+
+            // Load and scale the CPU icon
+            cpuIcon = new ImageIcon("images/cpuicon.png");
+            Image cpuImage = cpuIcon.getImage();
+            Image scaledCpuImage = cpuImage.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH); // Have to Resize image or it's too big otherwise
+            cpuIcon = new ImageIcon(scaledCpuImage);
+
+            // Load and scale the USB icon
+            usbIcon = new ImageIcon("images/usbicon.png");
+            Image usbImage = usbIcon.getImage();
+            Image scaledUsbImage = usbImage.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH);
+            usbIcon = new ImageIcon(scaledUsbImage);
+
+            // Load and scale the PCI icon
+            pciIcon = new ImageIcon("images/pciicon.png");
+            Image pciImage = pciIcon.getImage();
+            Image scaledPciImage = pciImage.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH);
+            pciIcon = new ImageIcon(scaledPciImage);
+
+            // Load and scale the Disk icon
+            diskIcon = new ImageIcon("images/diskicon.png");
+            Image diskImage = diskIcon.getImage();
+            Image scaledDiskImage = diskImage.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH);
+            diskIcon = new ImageIcon(scaledDiskImage);
+
+            // Load and scale the Memory icon
+            memIcon = new ImageIcon("images/memoryicon.png");
+            Image memImage = memIcon.getImage();
+            Image scaledMemImage = memImage.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH);
+            memIcon = new ImageIcon(scaledMemImage);
+
+
         } catch (IOException e) {
+
+            // Only here to stop the code from crashing if images are missing
             e.printStackTrace();
         }
 
-        JTabbedPane tabbedPane = new JTabbedPane(); // Create The tabbed Pane
+        JTabbedPane tabbedPane = new JTabbedPane(); // Create The main tabbed Pane
 
-        // Add the First Panel
+        // We create a wrapper for each panel and set add an empty border of 10 all around
         JPanel CPUPanelWrapper = new JPanel(new BorderLayout());
         CPUPanelWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+        // This creates the main Panel for CPU using the Gridbaglayout as it seems to work the best
         JPanel CPUPanel = new JPanel(new GridBagLayout());
+
+        // Create the CPU title (We can use HTML for Styling which is cool)
         JLabel CPUTitle = new JLabel("<html><span style='font-size:14px; font-weight:bold;'>CPU Info</span> " +
                 "<span style='font-size:11px;'> - Data will automatically refresh </span></html>");
+
+        // We have to add everything to the panel and add constraints to dictate the styling
         CPUPanel.add(CPUTitle, TitleConstraints);
 
         // Chart Code
-        XYSeries series;
+
         // Create a series to hold the data
         XYSeries CPU1 = new XYSeries("Utilisation");
         XYSeries CPU2 = new XYSeries("IdleTimes");
@@ -158,7 +200,6 @@ public class GUI {
         dataset.addSeries(CPU3);
         dataset.addSeries(CPU4);
 
-
         // Create the chart using JFreeChart
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "", // Chart title
@@ -171,13 +212,17 @@ public class GUI {
 
         // Get the plot from the chart and set the range for the y-axis
         XYPlot plot = chart.getXYPlot();
-        plot.getRangeAxis().setRange(0, 100); // Set y-axis range from 0 to 400
+        plot.getRangeAxis().setRange(0, 100); // Set y-axis range from 0 to 100
 
         // Create a panel for the chart
         ChartPanel chartPanel = new ChartPanel(chart);
+
+        // Set preferred dimensions
         chartPanel.setPreferredSize(new Dimension(200, 200));
+        // Add panel with constraints
         CPUPanel.add(chartPanel, CPUChart);
 
+        // Get all the CPU info and format it with html calls Sam's CPU class
         JLabel cpu_right_info_text = new JLabel("<html>" +
                 "<font size=>" + SamMclCPU.cpuName() + "</font><br><br>" +
                 "<table cellpadding='5' align='center'>" +
@@ -193,12 +238,12 @@ public class GUI {
                 "</table></html>");
 
         CPUPanel.add(cpu_right_info_text, CPURightInfo);
-        CPUPanelWrapper.add(CPUPanel);
-        JLabel cpu_bottom_info_panel = new JLabel("CPU Info");
-        cpu_bottom_info_panel.setHorizontalAlignment(JLabel.CENTER);
-        //CPUPanel.add(cpu_bottom_info_panel, CPUBottomInfo);
 
-        tabbedPane.addTab("CPU Info", null, CPUPanelWrapper, "CPU Info");
+        // Wrap up of the cpu panel here we add the man Panel to the wrapper and add the wrapper to the tabbed plane
+        CPUPanelWrapper.add(CPUPanel);
+        // Set Name, Image, Panel and Tooltip here
+        tabbedPane.addTab("CPU Info", cpuIcon, CPUPanelWrapper, "CPU Info");
+        // Set Keyboard shortcut toAlt+n and set appropriate tab index
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
 
@@ -248,7 +293,7 @@ public class GUI {
         MEMPanel.add(MEM_right_info_text, CPURightInfo);
 
         MEMPanelWrapper.add(MEMPanel);
-        tabbedPane.addTab("Memory Info", null, MEMPanelWrapper, "Memory Info");
+        tabbedPane.addTab("Memory Info", memIcon, MEMPanelWrapper, "Memory Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
         JPanel DISKPanelWrapper = new JPanel(new BorderLayout());
@@ -313,7 +358,7 @@ public class GUI {
         DISKPanel.add(DISKScrollPane2, DISKTableConstraints);
 
         DISKPanelWrapper.add(DISKPanel);
-        tabbedPane.addTab("Disk Info", null, DISKPanelWrapper, "Disk Info");
+        tabbedPane.addTab("Disk Info", diskIcon, DISKPanelWrapper, "Disk Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
         refreshTable(DISKTableModel, SamDiskInfo.diskTable2()); // Fetch Initial Data for Disk
 
@@ -376,7 +421,7 @@ public class GUI {
         });
 
         USBPanelWrapper.add(USBPanel);
-        tabbedPane.addTab("USB Info", null, USBPanelWrapper, "USB Info");
+        tabbedPane.addTab("USB Info", usbIcon, USBPanelWrapper, "USB Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
         refreshTable(USBTableModel, usb.getUSBInfoAs2DArray()); // Fetch Initial Data for USB
 
@@ -440,7 +485,7 @@ public class GUI {
         });
 
         PCIPanelWrapper.add(PCIPanel);
-        tabbedPane.addTab("PCI Info", null, PCIPanelWrapper, "PCI Info");
+        tabbedPane.addTab("PCI Info", pciIcon, PCIPanelWrapper, "PCI Info");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
         refreshTable(PCITableModel, pci.getPCIInfo()); // Fetch Initial Data for PCI
 
@@ -530,6 +575,16 @@ public class GUI {
         });
     }
 
+    public static void main(final String[] args) {
+        // Startup
+        SwingUtilities.invokeLater(GUI::createAndShowGUI);
+        System.loadLibrary("sysinfo");
+        usb = new patricktest();
+        pci = new PciTJ();
+        memory = new memory();
+        //disk = new SamDiskInfo();
+    }
+
     // Helper to make updating PieCharts Easier - CURSED
     public void updatePieCharts(String[][] newDiskInfo) {
         for (int i = 0; i < datasets.size(); i++) {
@@ -542,15 +597,5 @@ public class GUI {
             diskDataset.setValue("Used " + String.format("%.2f", usedSpace) + " GB", usedSpace);
             diskDataset.setValue("Free " + String.format("%.2f", freeSpace) + " GB", freeSpace);
         }
-    }
-
-    public static void main(final String[] args) {
-        // Startup
-        SwingUtilities.invokeLater(GUI::createAndShowGUI);
-        System.loadLibrary("sysinfo");
-        usb = new patricktest();
-        pci = new PciTJ();
-        memory = new memory();
-        //disk = new SamDiskInfo();
     }
 }

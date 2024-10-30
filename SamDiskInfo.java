@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class SamDiskInfo {
     public static void main(String[] args){
@@ -8,45 +7,7 @@ public class SamDiskInfo {
         diskTable();
 
     }
-    /*
-    public static double[] percentUsed(){
-        diskInfo disk = new diskInfo();
-        disk.read();
-        double[] diskPercentageArray = new double[disk.diskCount()];
-        for (int i = 0; i < disk.diskCount(); i++) {
-            double percentageDisk = ((double)disk.getUsed(i) / disk.getTotal(i))*100;
-            diskPercentageArray[i] = percentageDisk;
-        }
-        return diskPercentageArray;
-    }
-    public static ArrayList<String> diskNames(){
-        ArrayList<String> diskNamesArray = new ArrayList<>();
-        diskInfo disk = new diskInfo();
-        disk.read();
-        for (int i = 0; i < disk.diskCount(); i++) {
-            diskNamesArray.add(disk.getName(i));
-        }
-        return diskNamesArray;
-    }
-    public static long[] diskTotal() {
-        diskInfo disk = new diskInfo();
-        disk.read();
-        long[] diskBlocksArray = new long[disk.diskCount()];
-        for (int i = 0; i < disk.diskCount(); i++) {
-            diskBlocksArray[i] = disk.getTotal(i);
-        }
-        return diskBlocksArray;
-    }
-    public static long[] diskUsed() {
-        diskInfo disk = new diskInfo();
-        disk.read();
-        long[] diskBlocksUsedArray = new long[disk.diskCount()];
-        for (int i = 0; i < disk.diskCount(); i++) {
-            diskBlocksUsedArray[i] = disk.getUsed(i);
-        }
-        return diskBlocksUsedArray;
-    }
-    */
+
     public static String[][] diskTable(){
         diskInfo disk = new diskInfo();
         disk.read();
@@ -62,7 +23,6 @@ public class SamDiskInfo {
 
     public static String[][] diskTable2(){ // Nice Formatted Version
         diskInfo disk = new diskInfo();
-        System.out.println(disk.diskCount());
         String[][] diskInfoArray = new String[disk.diskCount()][4]; // Creates the 2d list
         for (int i = 0; i < disk.diskCount(); i++) {
             diskInfoArray[i][0] = disk.getName(i); // Adds the disk names to the first row

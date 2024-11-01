@@ -30,7 +30,6 @@ public class GUI {
     private static patricktest usb;
     private static PciTJ pci;
     private static memory memory;
-    private final List<DefaultPieDataset<String>> datasets = new ArrayList<>(); // Declare the datasets list to store each dataset
 
 
     private static void createAndShowGUI() {
@@ -255,9 +254,8 @@ public class GUI {
         MEMPanel.add(MEMTitle, TitleConstraints);
 
         // Chart Code
-        XYSeries MEMSeries;
         // Create a series to hold the data
-        MEMSeries = new XYSeries("");
+        XYSeries MEMSeries = new XYSeries("");
         // Create a dataset and add the series to it
         XYSeriesCollection MEMDataset = new XYSeriesCollection();
         MEMDataset.addSeries(MEMSeries);

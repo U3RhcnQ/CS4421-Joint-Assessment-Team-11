@@ -34,6 +34,7 @@ public class memory {
     }
 
     // 2d array
+    // String[][] specifies the return type of the method getMemoryInfoAs2DArray i.e 2D array
     public String[][] getMemoryInfoAs2DArray() {
         readMemory();
         // this creates a 4x1 array that holds a string value

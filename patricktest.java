@@ -3,8 +3,9 @@
 import java.util.HashMap;
 
 public class patricktest {
-    // private so it is encapsulated within the class
+    // private so it is encapsulated within the class, USB is an instance of the class
     private usbInfo usb;
+    // declares and initializes a static, private HashMap called vendorMap that maps String keys to String values.
     private static HashMap<String, String> vendorMap = new HashMap<>();
     private static HashMap<String, String> productMap = new HashMap<>();
 
@@ -13,6 +14,7 @@ public class patricktest {
     public patricktest() {
 
     //new usbInfo() creates a new instance of the usbInfo class
+    // this is used to make clear it is an instance variable
         this.usb = new usbInfo();
         initializeMaps();
     }
@@ -78,17 +80,21 @@ public class patricktest {
 
         // Create and give the array data
         String[][] usbArray = new String[totalDevices][6];
+        // starting position for rows in an array
         int rowIndex = 0;
 
         for (int bus = 1; bus <= getBusCount(); bus++) {
             for (int device = 1; device <= getDeviceCount(bus); device++) {
                 int vendorId = getVendorID(bus, device);
                 int productId = getProductID(bus, device);
-
+                // creates a new 1D array of String values with details about a USB device, and this array is assigned to usbArray[rowIndex].
                 usbArray[rowIndex] = new String[]{
+                        // convert int to string
                         String.valueOf(bus),                          // Bus number
                         String.valueOf(device),                       // Device number
+                        // formats into hexademical
                         String.format("0x%04X", vendorId),           // Vendor ID in hex
+                        // getVendorName takes in vendorId and returns a string with the vendor's name.
                         getVendorName(vendorId),                     // Vendor name
                         String.format("0x%04X", productId),          // Product ID in hex
                         getProductDescription(productId)             // Product description

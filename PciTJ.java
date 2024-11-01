@@ -5,14 +5,15 @@ import java.util.List;
 public class PciTJ {
 
     
-    private pciInfo pci;
-    private HashMap<String, String> vendorMap = new HashMap<>();
+    private pciInfo pci; //class variable declaration --> allows PciTJ ( the class ) to use the same pciInfo instance( pci ) across multiple methods
+    private HashMap<String, String> vendorMap = new HashMap<>(); //in hindsight I could've made these hashmaps public and static to save having to copy and paste it. making code neater
     private HashMap<String, String> productMap = new HashMap<>();
 
     public PciTJ(){
-        this.pci = new pciInfo();
-    }
+        this.pci = new pciInfo(); //instantiation --> By writing "this.pci", you’re explicitly saying that you are
+    }                             // assigning the new pciInfo() instance to the instance variable pci mentioned above
 
+    //hashmap > array here because can just use ".get("key")" and it would return it's corresponding value as opposed to an array where you have to iterate through all elements/indexes
     private void loadVendorMap() {
         vendorMap.put("0x8086", "Intel Corporation"); //declare that I used chatgpt to list the most common vendor ids and corresponding company name
         vendorMap.put("0x10DE", "NVIDIA Corporation");
@@ -96,25 +97,26 @@ public class PciTJ {
         productMap.put("0x0000", "Virtual Box PlaceHolder");
         productMap.put("0x0001", "Virtual Box PlaceHolder");
         productMap.put("0x8086", "Intel");
+        //vendorMap.get("0x8086") would return "Intel Corporation" for example.
     }
 
-    public String[][] getPCIInfo() {
+    public String[][] getPCIInfo() { //String[][] is the return type here
         pci.read();
         loadVendorMap();
-        loadProductMap();
+        loadProductMap();//allowing vendor and product map to be used in this getPCIInfo method
 
         List<String[]> pciFunctionList = new ArrayList<>();  // Use ArrayList for dynamic sizing
 
         for (int i = 0; i < pci.busCount(); i++) {  // Iterate through each bus
             for (int j = 0; j < pci.deviceCount(i); j++) {  // Iterate through each device
                 for (int k = 0; k < pci.functionCount(i, j); k++) {  // Iterate through each function
-                    if (pci.functionPresent(i, j, k) > 0) {  // Check if function is present
+                    if (pci.functionPresent(i, j, k) > 0) {  // "functionS present" returns number of functions in pci device
                         String vendorId = String.format("0x%04X", pci.vendorID(i, j, k));
                         String productId = String.format("0x%04X", pci.productID(i, j, k));
-                        String vendorName = vendorMap.getOrDefault(vendorId, "Unknown Vendor");
+                        String vendorName = vendorMap.getOrDefault(vendorId, "Unknown Vendor"); //look w3schools for get or default understanding
                         String productName = productMap.getOrDefault(productId, "Unknown Product");
 
-                        pciFunctionList.add(new String[]{
+                        pciFunctionList.add(new String[]{ //ADDS TO A LIST OF TYPE STRING ARRAY THE VALUES OF THE BUS AND IT'S CORRESPONDING AMOUNT OF DEVICES AND FUNCTIONS PER DEVICE
                                 String.valueOf(i),         // Bus number
                                 String.valueOf(j),         // Device number
                                 String.valueOf(k),         // Function number
@@ -128,8 +130,8 @@ public class PciTJ {
             }
         }
 
-        // Convert the ArrayList to a String[][] array
-        return pciFunctionList.toArray(new String[0][0]);
+      //RETURNS// Converts the ArrayList to a String[][] array
+        return pciFunctionList.toArray(new String[0][0]); // it's [0][0] to dynamically allocate an array with the correct size based on the contents of the ArrayList.
     }
 
 

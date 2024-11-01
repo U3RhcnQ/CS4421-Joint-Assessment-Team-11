@@ -88,6 +88,8 @@ public class patricktest {
                 int vendorId = getVendorID(bus, device);
                 int productId = getProductID(bus, device);
                 // creates a new 1D array of String values with details about a USB device, and this array is assigned to usbArray[rowIndex].
+                // The variable rowIndex in usbArray[rowIndex] tells the program which row in usbArray to put the information for each device.
+                // Each time a new device’s details are added, rowIndex points to the next row in usbArray, so every device has its own row for its data.
                 usbArray[rowIndex] = new String[]{
                         // convert int to string
                         String.valueOf(bus),                          // Bus number

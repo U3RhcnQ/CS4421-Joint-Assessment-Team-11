@@ -1,7 +1,7 @@
 // This should work for memory
 
 public class memory {
-
+    // memmory = instance variable
     private memInfo memory;
 
     // Initialises the memory instance variable. This allows the memory class to use memInfo
